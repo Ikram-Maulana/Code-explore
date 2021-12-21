@@ -22,10 +22,11 @@ let users = new Users("Ikram", 21);
 console.log(users);
 // ! Inheritance
 class Admin extends Users {
-    constructor() {
-        super(...arguments);
+    constructor(phone, name, age) {
+        super(name, age);
         this.read = true;
         this.write = true;
+        this.phone = phone;
     }
     getRole() {
         return {
@@ -34,5 +35,5 @@ class Admin extends Users {
         };
     }
 }
-let admin = new Admin("Ikram", 21);
+let admin = new Admin("08515659", "Ikram", 21);
 console.log(admin);
