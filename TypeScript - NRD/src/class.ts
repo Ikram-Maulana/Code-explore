@@ -32,6 +32,7 @@ class Admin extends Users {
   read: boolean = true;
   write: boolean = true;
   phone: string;
+  private _email: string = "";
 
   constructor(phone: string, name: string, age: number) {
     super(name, age);
@@ -44,7 +45,21 @@ class Admin extends Users {
       write: this.write
     }
   }
+
+  set email(value: string) {
+    if (value.length < 5){
+      this._email = "Email salah";
+    } else {
+      this._email = value;
+    }
+  }
+
+  get email(): string {
+    return this._email;
+  }
 }
 
 let admin = new Admin("08515659", "Ikram", 21);
 console.log(admin);
+admin.email = "ikram075@ummi.ac.id";
+console.log(admin.email);

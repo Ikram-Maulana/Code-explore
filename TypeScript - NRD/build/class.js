@@ -26,6 +26,7 @@ class Admin extends Users {
         super(name, age);
         this.read = true;
         this.write = true;
+        this._email = "";
         this.phone = phone;
     }
     getRole() {
@@ -34,6 +35,19 @@ class Admin extends Users {
             write: this.write
         };
     }
+    set email(value) {
+        if (value.length < 5) {
+            this._email = "Email salah";
+        }
+        else {
+            this._email = value;
+        }
+    }
+    get email() {
+        return this._email;
+    }
 }
 let admin = new Admin("08515659", "Ikram", 21);
 console.log(admin);
+admin.email = "ikram075@ummi.ac.id";
+console.log(admin.email);
