@@ -9,3 +9,7 @@ console.log(array2);
 let array3;
 array3 = ["ILY", 3000, true];
 console.log(array3);
+// ! Tuple -> terbatas
+let biodata;
+biodata = ["Sukabumi", 123];
+console.log(biodata);
