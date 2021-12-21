@@ -12,3 +12,9 @@ console.log(umur);
 // ! Boolean
 let isMarried: boolean = false;
 console.log(isMarried);
+
+// ! Any
+let heroes: any = "Iron Man";
+console.log(heroes);
+heroes = 3000;
+console.log(heroes);
