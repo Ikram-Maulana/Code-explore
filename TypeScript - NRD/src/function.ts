@@ -41,5 +41,13 @@ console.log(ttl);
 const fullNames = (first: string, last: string = "Maulana") => {
   return `${first} ${last}`;
 }
-
 console.log(fullNames("Ikram"));
+
+/** ===================================================================== */
+
+// ! Optional Parameter
+// Tidak disarankan untuk yang return tipe number karena akan jadi NaN
+const getUmur = (val1: string, val2?: string): string => {
+  return `${val1} ${val2}`;
+}
+console.log(getUmur("A", "B"));

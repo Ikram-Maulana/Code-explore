@@ -31,3 +31,10 @@ const fullNames = (first, last = "Maulana") => {
     return `${first} ${last}`;
 };
 console.log(fullNames("Ikram"));
+/** ===================================================================== */
+// ! Optional Parameter
+// Tidak disarankan untuk yang return tipe number karena akan jadi NaN
+const getUmur = (val1, val2) => {
+    return `${val1} ${val2}`;
+};
+console.log(getUmur("A", "B"));
