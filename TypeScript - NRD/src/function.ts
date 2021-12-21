@@ -1,6 +1,6 @@
 // ! Tipe data pada balikan function
 function getName():string {
-  return "Hello, my name is ikram maulana";
+  return "Hello, my name is Ikram Maulana";
 }
 console.log(getName());
 
@@ -34,3 +34,12 @@ const add = (val1: number, val2: number): number => {
 }
 const ttl = add(20, 10);
 console.log(ttl);
+
+/** ===================================================================== */
+
+// ! Default Parameter
+const fullNames = (first: string, last: string = "Maulana") => {
+  return `${first} ${last}`;
+}
+
+console.log(fullNames("Ikram"));

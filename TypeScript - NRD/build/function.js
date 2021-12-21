@@ -1,7 +1,7 @@
 "use strict";
 // ! Tipe data pada balikan function
 function getName() {
-    return "Hello, my name is ikram maulana";
+    return "Hello, my name is Ikram Maulana";
 }
 console.log(getName());
 function getAge() {
@@ -25,3 +25,9 @@ const add = (val1, val2) => {
 };
 const ttl = add(20, 10);
 console.log(ttl);
+/** ===================================================================== */
+// ! Default Parameter
+const fullNames = (first, last = "Maulana") => {
+    return `${first} ${last}`;
+};
+console.log(fullNames("Ikram"));
