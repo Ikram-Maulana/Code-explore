@@ -2,6 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Users = void 0;
 // ! Class
+// Public = bisa diakses di semua class
+// Protected = hanya bisa diakses dari class tersebut dan kelas turunannya
+// Private = hanya bisa diakses dari class itu sendiri
 class Users {
     constructor(name, age) {
         this.age = age;

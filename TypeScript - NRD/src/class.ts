@@ -1,6 +1,9 @@
 // ! Class
+// Public = bisa diakses di semua class
+// Protected = hanya bisa diakses dari class tersebut dan kelas turunannya
+// Private = hanya bisa diakses dari class itu sendiri
 export class Users {
-  public name: string;
+  name: string;
 
   constructor(name: string, public age: number) {
     this.name = name;
