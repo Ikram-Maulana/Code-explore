@@ -20,3 +20,8 @@ function multiply(val1, val2) {
 }
 const result = multiply(3, 10);
 console.log(result);
+const add = (val1, val2) => {
+    return val1 + val2;
+};
+const ttl = add(20, 10);
+console.log(ttl);

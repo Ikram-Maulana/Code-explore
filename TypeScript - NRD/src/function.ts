@@ -23,3 +23,14 @@ function multiply(val1: number, val2: number): number {
 }
 const result = multiply(3, 10);
 console.log(result);
+
+/** ===================================================================== */
+
+// ! Function as type
+// type Name = (value: type) => returnType
+type Tambah = (val1: number, val2: number) => number;
+const add = (val1: number, val2: number): number => {
+  return val1 + val2;
+}
+const ttl = add(20, 10);
+console.log(ttl);
