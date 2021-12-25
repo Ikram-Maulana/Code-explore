@@ -14,9 +14,11 @@ class Home {
 } ?>`
 4. Back to app.php then create code for check url[0] is exists on controllers folder
 `// Controller`
+`if(isset($url[0])) {`
 `if(file_exists('../app/controllers/'  .  $url[0]  .  '.php'))  {`
 `$this->controller  =  $url[0];`
 `unset($url[0]);` // Kalau sudah digunakan ketika di var_dump url[0] hilang
+`}`
 `}`
 5. Then require the class and instantiate the class
 `require_once  '../app/controllers/'  .  $this->controller  .  '.php';`

@@ -8,11 +8,13 @@ class App {
     $url = $this->parseURL(); 
     
     // Controller
-    if(file_exists('../app/controllers/' . $url[0] . '.php')) {
-      $this->controller = $url[0];
-      // Kalau sudah digunakan ketika di var_dump url[0] hilang
-      unset($url[0]);
-      // var_dump($url);
+    if(isset($url[0])) {
+      if(file_exists('../app/controllers/' . $url[0] . '.php')) {
+        $this->controller = $url[0];
+        // Kalau sudah digunakan ketika di var_dump url[0] hilang
+        unset($url[0]);
+        // var_dump($url);
+      }
     }
     
     require_once '../app/controllers/' . $this->controller . '.php';
