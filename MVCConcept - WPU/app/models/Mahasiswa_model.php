@@ -15,27 +15,23 @@ class Mahasiswa_model {
   //     "jurusan" => "Administrasi Bisnis"
   //   ],
   // ];
-
-  // ! Konek Database
-  // Database Handler
-  private $dbh;
-  private $stmt;
+  private $table = 'mahasiswa';
+  private $db;
 
   public function __construct() {
-    // Data Source Name
-    $dsn = 'mysql:host=localhost;dbname=codelab_phpmvc';
-    try {
-      $this->dbh = new PDO($dsn, 'root', '');
-    } catch(PDOException $e) {
-      die($e->getMessage());
-    }
+    $this->db = new Database;
   }
 
   public function getAllMahasiswa() {
     // return $this->mhs;
-    $this->stmt = $this->dbh->prepare('SELECT * from mahasiswa');
-    $this->stmt->execute();
-    return $this->stmt->fetchAll(PDO::FETCH_ASSOC);
+    $this->db->query('SELECT * FROM ' . $this->table);
+    return $this->db->resultSet();
+  }
+
+  public function getMahasiswaById($id) {
+    $this->db->query('SELECT * FROM ' . $this->table . ' WHERE id=:id');
+    $this->db->bind('id', $id);
+    return $this->db->single();
   }
 }
 
