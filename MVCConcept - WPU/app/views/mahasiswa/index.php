@@ -9,7 +9,8 @@
       </div>
 
       <!-- Button Trigger Modal -->
-      <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#formModal">
+      <button type="button" class="btn btn-primary mb-3 tombolTambahData" data-bs-toggle="modal"
+        data-bs-target="#formModal">
         Tambah Data Mahasiswa
       </button>
 
@@ -20,6 +21,9 @@
         <li class="list-group-item align-items-center"><?= $mhs['nama']; ?>
           <a class="badge bg-danger float-end ms-1" href="<?= BASEURL; ?>/mahasiswa/hapus/<?= $mhs['id']; ?>"
             onclick="return confirm('yakin?');">hapus</a>
+          <a class="badge bg-success float-end ms-2 tampilModalUbah"
+            href="<?= BASEURL; ?>/mahasiswa/detail/<?= $mhs['id']; ?>" data-bs-toggle="modal"
+            data-bs-target="#formModal" data-id="<?= $mhs['id']; ?>">ubah</a>
           <a class="badge bg-primary float-end ms-2"
             href="<?= BASEURL; ?>/mahasiswa/detail/<?= $mhs['id']; ?>">detail</a>
         </li>
@@ -40,6 +44,7 @@
       <div class="modal-body">
 
         <form action="<?= BASEURL; ?>/mahasiswa/tambah" method="POST">
+          <input type="hidden" name="id" id="id">
           <div class="mb-3">
             <label for="nama" class="form-label">Nama</label>
             <input type="text" class="form-control" id="nama" name="nama">
