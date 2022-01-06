@@ -1,9 +1,14 @@
 <?php 
 
+// Default
+$path = "/index";
+
+// Cek
 if(isset($_SERVER['PATH_INFO'])) {
-  echo $_SERVER['PATH_INFO'];
-} else {
-  echo "Tidak ada path info";
-} 
+  $path = $_SERVER['PATH_INFO'];
+}
+
+// Load file
+require __DIR__ . '/../app/View'. $path .'.php'; 
 
 ?>
