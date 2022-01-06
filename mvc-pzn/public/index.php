@@ -1,14 +1,11 @@
 <?php 
 
-// Default
-$path = "/index";
+require_once __DIR__ . "/../vendor/autoload.php";
 
-// Cek
-if(isset($_SERVER['PATH_INFO'])) {
-  $path = $_SERVER['PATH_INFO'];
-}
+use Kelompokmsib\Pbo\App\Router;
 
-// Load file
-require __DIR__ . '/../app/View'. $path .'.php'; 
+Router::add('GET', '/', 'HomeController', 'index');
+Router::add('GET', '/about', 'HomeController', 'about');
+Router::run();
 
 ?>
