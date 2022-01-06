@@ -2,14 +2,16 @@
 
 namespace Kelompokmsib\Pbo\Controller;
 
+use Kelompokmsib\Pbo\App\View;
+
 class HomeController {
   function index(): void {
     $model = [
       'title' => "Belajar PHP MVC",
-      'content' => "Selamat Belajar"
+      'content' => "Selamat Belajar Ikram"
     ];
     
-    echo "HomeController.index()";
+    View::render('Home/index', $model);
   }
   
   function about(): void {
