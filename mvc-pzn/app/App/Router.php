@@ -6,12 +6,13 @@ class Router {
   private static array $routes = [];
 
   // Menambahkan url mapping
-  public static function add(string $method, string $path, string $controller, string $function): void {
+  public static function add(string $method, string $path, string $controller, string $function, array $middlewares = []): void {
     self::$routes[] = [
       'method' => $method,
       'path' => $path,
       'controller' => $controller,
-      'function' => $function
+      'function' => $function,
+      'middleware' => $middlewares
     ];
   }
   
@@ -28,6 +29,12 @@ class Router {
       if(preg_match($pattern, $path, $variables) && $method == $route['method']){
         $controller = new $route['controller'];
         $function = $route['function'];
+
+        // Middleware
+        foreach ($route['middleware'] as $middleware) {
+          $instance = new $middleware;
+          $instance->before(); 
+        }
         
         array_shift($variables);
         call_user_func_array([$controller, $function], $variables);
