@@ -36,4 +36,3 @@ Documentation of Gradient color can you access [here](https://tailwindcss.com/do
 Documentation of Text decoration can you access [here](https://tailwindcss.com/docs/text-decoration).
 - Text Align  
 Documentation of Text Align can you access [here](https://tailwindcss.com/docs/text-align).
-8. 
