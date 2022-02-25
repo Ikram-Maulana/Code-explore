@@ -1,7 +1,8 @@
 var CACHE_NAME = 'shayna-cache-v1';
 var urlsToCache = [
   './',
-  './index.html'
+  './index.html',
+  './page.html'
 ];
 
 self.addEventListener('install', function (event) {
