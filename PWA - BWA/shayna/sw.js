@@ -1,8 +1,8 @@
-var CACHE_NAME = 'shayna-cache-v1';
+var CACHE_NAME = 'ipwa-cache-v1';
 var urlsToCache = [
   './',
   './index.html',
-  './page.html'
+  './offline.html'
 ];
 
 self.addEventListener('install', function (event) {
@@ -46,7 +46,13 @@ self.addEventListener('fetch', function (event) {
           return response;
         }
       );
-    })
+    }).catch(function () {
+      // If both fail, show a generic fallback:
+      return caches.match('./offline.html');
+      // However, in reality you'd have many different
+      // fallbacks, depending on URL and headers.
+      // Eg, a fallback silhouette image for avatars.
+    }),
   );
 });
 

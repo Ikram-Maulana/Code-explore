@@ -1,32 +1,35 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Index PWA</title>
+  <!-- Font Inter Google -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="./style.min.css">
   <!-- Import Manifest -->
   <link rel="manifest" href="manifest.json">
-
-  <title>PWA Shayna</title>
 </head>
 
-<body>
-  <h2>
-    Belajar PWA Asiik!
-  </h2>
-
-  <!-- Optional JavaScript; choose one of the two! -->
-
-  <!-- Option 1: Bootstrap Bundle with Popper -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
-  </script>
+<body class="font-inter">
+  <div class="bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text flex flex-col container mx-auto h-screen px-6">
+    <div class="m-auto">
+      <img src="./images/macbook2.jpg" alt="Profile" class="mx-auto mb-4 h-32 w-32 object-cover rounded-full">
+      <h1 class="text-4xl text-transparent font-bold text-center">Ikram PWAs Application</h1>
+      <div class="flex flex-col md:flex-row md:gap-4 justify-center items-center">
+        <a href="https://github.com/ikram-maulana"
+          class="bg-slate-700 w-36 h-10 text-center my-4 md:my-4 flex justify-center items-center text-white rounded-lg shadow-lg font-bold px-4 hover:bg-slate-800 active:bg-slate-900 focus:ring-2 focus:ring-slate-500 focus:outline-0"
+          target="_blank" noreferrer>Go to Github</a>
+        <a href="./about.html"
+          class="bg-slate-700 w-36 h-10 text-center md:my-4 flex justify-center items-center text-white rounded-lg shadow-lg font-bold px-4 hover:bg-slate-800 active:bg-slate-900 focus:ring-2 focus:ring-slate-500 focus:outline-0">About
+          Me</a>
+      </div>
+    </div>
+  </div>
 
   <script src="main.js"></script>
 </body>
