@@ -35,3 +35,6 @@
 - Di routing `/profile` tambahkan parsing **data** `user` dari `user.req`
 - Buat **middleware** `localStrategy` untuk login
 - Buat isi dari halaman `login.ejs`
+
+## 07 - File statis pada nodejs
+- Kita bisa menambahkan file css di folder **public**
