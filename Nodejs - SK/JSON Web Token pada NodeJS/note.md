@@ -10,4 +10,10 @@
 - Ke `app.js` lakukan `requirement` **express, bodyparser, mongoose, jwt, cors, express.Router(), express()**, `setup` **require config, userModel, middleware bodyParser, koneksi Database, set secretKey, middleware cors**, dan `runApp listen`
 
 ## 03 - Warning fungsi connect di mongoose
-- Dokumentasi mengenai **mongoose** bisa diakses [di sini](https://mongoosejs.com/).
+- Dokumentasi mengenai **mongoose** bisa diakses [di sini](https://mongoosejs.com/).  
+
+## 04 - Menyiapkan database dan route  
+- Buat database dengan nama `jwtusers` dan collections `users` buat **2 users** untuk percobaan
+- Ke `app/models/user` lakukan `require` **mongoose dan Schema** lalu `exports`
+- Ke `app.js` lakukan routing dengan `router` ke halaman **'/' dan '/users'**
+- Tambahkan prefix `api`

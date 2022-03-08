@@ -22,6 +22,20 @@ mongoose.connect(config.database);
 app.set("secretKey", config.secret);
 app.use(cors());
 
+// Routing
+router.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+
+router.get('/users', (req, res) => {
+  User.find({}, (err, users) => {
+    res.json(users);
+  });
+});
+
+// Prefix /api
+app.use('/api', router);
+
 // Run App
 app.listen(port, () => {
   console.log(`Server is running on: http://127.0.0.1:${port}`);
