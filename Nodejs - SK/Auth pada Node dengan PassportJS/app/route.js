@@ -41,7 +41,10 @@ module.exports = function (app, passport) {
 
   // Halaman Profile
   app.get('/profile', isLoggedIn, (req, res) => {
-    res.render('profile');
+    const data = {
+      user: req.user
+    }
+    res.render('profile', data);
   });
 
 };

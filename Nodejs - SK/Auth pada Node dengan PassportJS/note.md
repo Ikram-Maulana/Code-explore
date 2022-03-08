@@ -25,6 +25,13 @@
 ## 05 - Metode sign up passportjs  
 - Buka `app.js`
 - Lakukan `require` ke file **passport** terpisah **Dan parsing passport**
+- Buat isi `signup.ejs`
 - Buka `passport.js` lakukan require ke `passport-local.Strategy` dan file `Model User`
 - buat `passport.serializeUser` dan `passport.deserializeUser`
-- Buat middleware `localStrategy` untuk signup
+- Buat **middleware** `localStrategy` untuk signup
+
+## 06 - Metode sign in passportjs  
+- Buka `app.js`
+- Di routing `/profile` tambahkan parsing **data** `user` dari `user.req`
+- Buat **middleware** `localStrategy` untuk login
+- Buat isi dari halaman `login.ejs`
