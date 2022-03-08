@@ -21,3 +21,10 @@
 - Untuk routing diganti menjadi `require` ke **file route terpisah** dan parsing `app dan passport`
 - Buka `route.js`, buat route **Get** (`home, login, logout, signup, profile`), route **Post** (`login, signup`) gunakan `passport.authenticate()`
 - Untuk routing `profile` lakukan **pengecekan** `isLoggedIn` dan buat fungsinya di luar export
+
+## 05 - Metode sign up passportjs  
+- Buka `app.js`
+- Lakukan `require` ke file **passport** terpisah **Dan parsing passport**
+- Buka `passport.js` lakukan require ke `passport-local.Strategy` dan file `Model User`
+- buat `passport.serializeUser` dan `passport.deserializeUser`
+- Buat middleware `localStrategy` untuk signup
