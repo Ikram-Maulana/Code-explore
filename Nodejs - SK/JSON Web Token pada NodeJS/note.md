@@ -8,3 +8,6 @@
 - **Initialize** folder
 - Install `express body-parser mongoose jsonwebtoken cors`
 - Ke `app.js` lakukan `requirement` **express, bodyparser, mongoose, jwt, cors, express.Router(), express()**, `setup` **require config, userModel, middleware bodyParser, koneksi Database, set secretKey, middleware cors**, dan `runApp listen`
+
+## 03 - Warning fungsi connect di mongoose
+- Dokumentasi mengenai **mongoose** bisa diakses [di sini](https://mongoosejs.com/).
