@@ -14,4 +14,10 @@
 - Require `mongoose, bcrypt`
 - Buat `Scheme` untuk **email** dan **password**
 - Buat `User Method` untuk **generateHash** dan **cekPassword**
-- `Export`
+- `Export`  
+
+## 04 - Sistem routing  
+- Buka `app.js`
+- Untuk routing diganti menjadi `require` ke **file route terpisah** dan parsing `app dan passport`
+- Buka `route.js`, buat route **Get** (`home, login, logout, signup, profile`), route **Post** (`login, signup`) gunakan `passport.authenticate()`
+- Untuk routing `profile` lakukan **pengecekan** `isLoggedIn` dan buat fungsinya di luar export

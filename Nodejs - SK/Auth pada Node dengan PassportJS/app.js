@@ -35,10 +35,8 @@ app.use(flash());
 // Setup EJS
 app.set('view engine', 'ejs');
 
-// Route
-app.get('/', (req, res) => {
-  res.render('index');
-});
+// Route using Require
+require('./app/route')(app, passport);
 
 // Run App
 app.listen(port, () => {
