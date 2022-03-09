@@ -16,4 +16,9 @@
 - Buat database dengan nama `jwtusers` dan collections `users` buat **2 users** untuk percobaan
 - Ke `app/models/user` lakukan `require` **mongoose dan Schema** lalu `exports`
 - Ke `app.js` lakukan routing dengan `router` ke halaman **'/' dan '/users'**
-- Tambahkan prefix `api`
+- Tambahkan prefix `api`  
+
+## 05 - Login dan generate token  
+- Ke `app.js` buat `routes POST` ke login
+- Gunakan `User.findOne()` dan lakukan **Pengkondisian**
+- Buat token dengan `jwt.sign()` dalam variable `token`

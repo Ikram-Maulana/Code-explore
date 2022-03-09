@@ -23,6 +23,41 @@ app.set("secretKey", config.secret);
 app.use(cors());
 
 // Routing
+router.post('/login', (req, res) => {
+  User.findOne({
+    email: req.body.email
+  }, (err, user) => {
+    if (err) throw err;
+    if (!user) {
+      res.json({
+        success: false,
+        message: 'User not found'
+      });
+    } else if (user) {
+      if (user.password != req.body.password) {
+        res.json({
+          success: false,
+          message: 'Wrong password'
+        });
+      } else {
+        const payload = {
+          id: user._id,
+          email: user.email,
+          password: user.password
+        };
+        const token = jwt.sign(payload, config.secret, {
+          expiresIn: '24h'
+        });
+        res.json({
+          success: true,
+          message: 'Success get Token!',
+          token: token
+        });
+      }
+    }
+  });
+});
+
 router.get('/', (req, res) => {
   res.send('Hello World!');
 });
