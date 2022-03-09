@@ -79,7 +79,18 @@ router.use((req, res, next) => {
         });
       } else {
         req.decoded = decoded;
-        next();
+
+        // is token expired?
+        if (decoded.exp < Date.now()/1000) {
+          return res.status(400).send({
+            success: false,
+            message: 'Token expired',
+            date: Date.now()/1000,
+            exp: decoded.exp
+          });
+        } else {
+          next();
+        }
       }
     });
   }
@@ -89,6 +100,10 @@ router.get('/users', (req, res) => {
   User.find({}, (err, users) => {
     res.json(users);
   });
+});
+
+router.get('/profile', (req, res) => {
+  res.json(req.decoded);
 });
 
 // Prefix /api

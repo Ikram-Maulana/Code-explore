@@ -26,4 +26,9 @@
 ## 06 - Verifikasi token  
 - Ke `app.js` buat `middleware` cek token
 - Ambil **token** dari `req.headers()`
-- Lakukan **Pengecekan** terhadap **token**, jika ada maka verifikasi menggunakan `jwt.verify()` dan `decoded`
+- Lakukan **Pengecekan** terhadap **token**, jika ada maka verifikasi menggunakan `jwt.verify()` dan `decoded`  
+
+## 07 - Data yang sedang login  
+- Ke `app.js`
+- di `middleware` **cek token** tambahkan pengecekan apakah token sudah expired atau belum menggunakan `decode.exp`
+- Buat **Route GET** ke `/profile` yang menampilkan `res.json(req.decode)`
