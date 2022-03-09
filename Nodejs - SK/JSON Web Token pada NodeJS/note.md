@@ -21,4 +21,9 @@
 ## 05 - Login dan generate token  
 - Ke `app.js` buat `routes POST` ke login
 - Gunakan `User.findOne()` dan lakukan **Pengkondisian**
-- Buat token dengan `jwt.sign()` dalam variable `token`
+- Buat token dengan `jwt.sign()` dalam variable `token`  
+
+## 06 - Verifikasi token  
+- Ke `app.js` buat `middleware` cek token
+- Ambil **token** dari `req.headers()`
+- Lakukan **Pengecekan** terhadap **token**, jika ada maka verifikasi menggunakan `jwt.verify()` dan `decoded`

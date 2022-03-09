@@ -62,6 +62,29 @@ router.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
+// Protect route with token
+router.use((req, res, next) => {
+  const token = req.headers['authorization'];
+  if (!token) {
+    return res.status(403).send({
+      success: false,
+      message: 'No token provided.'
+    });
+  } else {
+    jwt.verify(token, app.get('secretKey'), (err, decoded) => {
+      if (err) {
+        res.json({
+          success: false,
+          message: 'Token invalid'
+        });
+      } else {
+        req.decoded = decoded;
+        next();
+      }
+    });
+  }
+});
+
 router.get('/users', (req, res) => {
   User.find({}, (err, users) => {
     res.json(users);
