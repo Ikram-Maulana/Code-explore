@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Konsumsi JWT</title>
+</head>
+
+<body>
+  <h1>JWT Using JS Cookie</h1>
+
+  <!-- login -->
+  <form id="form">
+    <input type="email" name="email" id="email">
+    <input type="password" name="password" id="password">
+    <input type="submit" value="Log In">
+  </form>
+
+  <button type="button" id="getUsers">Daftar List User</button>
+  <button type="button" id="seeProfile">See Profile</button>
+  <button type="button" id="logout">Logout</button>
+
+  <br>
+  <br>
+  <button type="button" id="seeToken">See Token</button>
+
+  <script type="module" src="js.cookie.mjs"></script>
+  <script nomodule defer src="js.cookie.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script type="module">
+    import Cookies from './js.cookie.mjs';
+
+    const form = document.getElementById('form');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      const data = {
+        email,
+        password
+      }
+
+      // post login using axios then set token to cookie using cookie-parser
+      axios.post('http://localhost:3000/api/login', data)
+        .then(res => {
+          if (res.data.token) {
+            Cookies.set('token', `${res.data.token}`);
+            alert("Login Success");
+          } else {
+            alert('Login gagal');
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    });
+
+    // List Users using header authorization from cookie
+    const getUsers = document.getElementById('getUsers');
+    getUsers.addEventListener('click', (e) => {
+      e.preventDefault();
+      const token = Cookies.get('token');
+      const config = {
+        headers: {
+          'Authorization': `${token}`
+        }
+      }
+
+      axios.get('http://localhost:3000/api/users', config)
+        .then(res => {
+          console.log(res.data);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    });
+
+    // See Profile User
+    const seeProfile = document.getElementById('seeProfile');
+    seeProfile.addEventListener('click', (e) => {
+      e.preventDefault();
+      const token = Cookies.get('token');
+      const config = {
+        headers: {
+          'Authorization': `${token}`
+        }
+      }
+
+      axios.get('http://localhost:3000/api/profile', config)
+        .then(res => {
+          console.log(res.data);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    });
+
+    // Logout remove cookie
+    const logout = document.getElementById('logout');
+    logout.addEventListener('click', (e) => {
+      e.preventDefault();
+      Cookies.remove('token');
+      alert('Logout Success');
+    });
+
+    // See token
+    const seeToken = document.getElementById('seeToken');
+    seeToken.addEventListener('click', (e) => {
+      e.preventDefault();
+      const token = Cookies.get('token');
+      console.log(token);
+    });
+  </script>
+</body>
+
+</html>
