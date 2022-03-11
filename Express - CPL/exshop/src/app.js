@@ -23,6 +23,16 @@ let corsOptions = {
 }
 app.use(cors(corsOptions));
 
+// Database
+const db = require('./models/index');
+db.sequelize.sync({
+  force: true
+}).then(() => {
+  console.log('Database connected');
+}).catch(err => {
+  console.error(`Database connection error: ${err.message}`);
+});
+
 // Route
 app.get('/', (req, res) => {
   res.json({
