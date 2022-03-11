@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Web service like classified ads",
   "main": "app.js",
+  "scripts": {
+    "dev": "nodemon ./src/app"
+  },
   "author": "Ikram Maulana",
   "license": "MIT",
   "dependencies": {
