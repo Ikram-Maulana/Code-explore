@@ -81,4 +81,10 @@ Dokumentasi mengenai **bulkCreate** dapat diakses [di sini](https://sequelize.or
 - Buat file `/middleware/register.js` lakukan `require` terhadap `db, db.user`
 - Buat function `isUserExist` menggunakan `User.findOne({email: req.body.email})` untuk mengecek **duplikasi email** kemudian lakukan `exports`
 - Buat file `/middleware/index.js` untuk **membundle** semua middleware yang akan dibuat, lalu lakukan `import` dan `exports`
-- Ke file `/routes/auth.routes.js` lakukan `require` terhadap file `/middleware/index` dan simpan sebagai **parameter kedua** dalam **Route POST**
+- Ke file `/routes/auth.routes.js` lakukan `require` terhadap file `/middleware/index` dan simpan sebagai **parameter kedua** dalam **Route POST**  
+
+### 2.4 Membuat Fungsi Login Di Controller  
+- Ke file `/controller/auth.controller.js` lalu buat `exports.login`, kemudian isi dengan `User.findOne`
+- Lakukan **Pengecekan** apakah emailnya ada, passwordnya benar dengan `bcrypt.compareSync()`, kemudian **jika benar** kita assign `accessToken` menggunakan `jwt.sign()`
+- Jangan lupa lakukan `require` terhadap `jwt`
+- Ke file `/routes/auth.routes.js`, kemudian buat **routes baru** untuk **POST** `/api/auth/login`

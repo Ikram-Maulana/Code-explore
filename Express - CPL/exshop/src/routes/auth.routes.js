@@ -10,4 +10,7 @@ module.exports = (app) => {
 
   // Post /api/auth/register
   app.post('/api/auth/register', middleware.isUserExist, controller.register);
+
+  // Post /api/auth/login
+  app.post('/api/auth/login', controller.login);
 };
