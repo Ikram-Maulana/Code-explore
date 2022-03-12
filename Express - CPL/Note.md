@@ -75,4 +75,10 @@ Dokumentasi mengenai **bulkCreate** dapat diakses [di sini](https://sequelize.or
 - Buat file `/routes/auth.routes.js` Lakukan `require` terhadap `/controller/auth.controller.js`
 - Lakukan `module.exports` dan buat routes untuk **pengecekan** dengan middleware yang memeriksa **res.header()**
 - Buat `routes` **POST** `/api/auth/register` yang parameternya mengarah ke `controller.register`
-- Ke file `app.js` lakukan `require` file **Routes** dengan parameter `app`
+- Ke file `app.js` lakukan `require` file **Routes** dengan parameter `app`  
+
+### 2.3 Membuat Middleware Untuk Validasi Email Unik  
+- Buat file `/middleware/register.js` lakukan `require` terhadap `db, db.user`
+- Buat function `isUserExist` menggunakan `User.findOne({email: req.body.email})` untuk mengecek **duplikasi email** kemudian lakukan `exports`
+- Buat file `/middleware/index.js` untuk **membundle** semua middleware yang akan dibuat, lalu lakukan `import` dan `exports`
+- Ke file `/routes/auth.routes.js` lakukan `require` terhadap file `/middleware/index` dan simpan sebagai **parameter kedua** dalam **Route POST**

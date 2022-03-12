@@ -1,4 +1,5 @@
 const controller = require('../controllers/auth.controller');
+const middleware = require('../middleware/index');
 
 module.exports = (app) => {
   // Checking
@@ -8,5 +9,5 @@ module.exports = (app) => {
   });
 
   // Post /api/auth/register
-  app.post('/api/auth/register', controller.register);
+  app.post('/api/auth/register', middleware.isUserExist, controller.register);
 };
