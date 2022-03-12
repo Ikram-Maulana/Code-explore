@@ -25,9 +25,11 @@ app.use(cors(corsOptions));
 
 // Database
 const db = require('./models/index');
+const seed = require('./models/seeds/index');
 db.sequelize.sync({
   force: true
 }).then(() => {
+  seed.userSeed();
   console.log('Database connected');
 }).catch(err => {
   console.error(`Database connection error: ${err.message}`);

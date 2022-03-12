@@ -47,4 +47,11 @@ Dokumentasi mengenai `sequelize` dapat diakses [di sini](https://sequelize.org/)
 - Lakukan `sequelize.define` dan buat **skema tabel dan kolom database** yang isinya `user_id, category_id, title, brand, model, year, condition, price, description, address, loc_attitude, loc_longitude, sold`
 - Buat file `models/image.model.js` lakukan `module.export` yang memiliki parameter `sequelize dan Sequelize`
 - Lakukan `sequelize.define` dan buat **skema tabel dan kolom database** yang isinya `product_id, file`
-- Lakukan **pendefinisian** di file `models/index.js`
+- Lakukan **pendefinisian** di file `models/index.js`  
+
+### 1.6 Membuat Modul Seed Untuk Import Dummy Data  
+- Buat file `models/seeds/user.seeder.js` lakukan **import** terhadap `index` model dan `user.model`
+- Lakukan `exports.namaSeed` dan isi dengan `User.create()`
+- Buat file `models/seeds/index.js` sebagai file untuk **membundle seeds**
+- Lakukan `require` terhadap `user.model.js` dan export
+- Ke file `app.js` buat require file `models/seeds/index` dalam **variable seed**, lalu lakukan `seed.namaSeed()` sebelum `console` **koneksi sukses**
