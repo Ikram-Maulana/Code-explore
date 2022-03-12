@@ -94,3 +94,10 @@ Dokumentasi mengenai **bulkCreate** dapat diakses [di sini](https://sequelize.or
 - Buat **Function** `verifyToken()`, lalu buat **variabel token** yang isinya `req.headers['authorization']`
 - Lakukan **Pengkondisian** jika tidak ada token
 - Jika **ada** token gunakan `jwt.verify()` dan lakukan **Pengkondisian** apakah token valid atau tidak
+- Ke file `/middleware/index.js` lakukan `require` terhadap `/middleware/authJwt`  
+
+### 2.6 Mendapatkan Data User Berdasarkan Token  
+- Buat file `/controller/profile.controller.js`, Lakukan `require` terhadap `db dan db.user` 
+- Buat `exports.profile` kemudian isi dengan `User.findByPk(req.userId)` dan lakukan **pengkondisian**
+- Buat file `routes/profile.routes.js` lakukan `require` terhadap `controller dan middleware`
+- Buat `module.exports` kemudian isi dengan **routing** ke `/api/profile` dengan parameter `middleware.verifyToken` dan `controller.profile`
