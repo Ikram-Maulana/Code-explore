@@ -61,4 +61,12 @@ Dokumentasi mengenai **bulkCreate** dapat diakses [di sini](https://sequelize.or
 - Buat file `models/seeds/category.seeder.js` lakukan **import** terhadap `index` model dan `db.category`
 - Lakukan `exports.namaSeed` dan isi dengan `Category.create()`
 - Ke file `models/seeds/index` Lakukan `require` terhadap `category.model.js` dan `export`
-- Ke file `app.js` lakukan `seed.namaSeed()` sebelum `console` **koneksi sukses**
+- Ke file `app.js` lakukan `seed.namaSeed()` sebelum `console` **koneksi sukses**  
+
+## 02 - Authentication  
+### 2.1 Membuat Fungsi Register Di Controller  
+- Ke file `app.js` komentari bagian `seed` dan `sync({force:true})` **ganti** menjadi `sync`
+- Buat file `config/auth.js` lakukan `export.module` **secret key** yang diambil dari file `.env`
+- Ke file `.env` buat `APP_KEY = secret-key`
+- Buat file `controller/user.controller.js` lakukan **import** terhadap `/model/index, db.user, bcrypt, config`
+- Lakukan `module.export` dan isi dengan `User.create()` terhadap `name, phone, email` dan `password` yang memakai fungsi `bcrypt.hasSync()`
