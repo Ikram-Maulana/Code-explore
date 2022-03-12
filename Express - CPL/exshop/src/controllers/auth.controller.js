@@ -5,7 +5,7 @@ const User = db.user;
 const bcrypt = require('bcryptjs');
 
 // Function
-module.exports = (req, res) => {
+exports.register = (req, res) => {
   User.create({
     name: req.body.name,
     phone: req.body.phone,
@@ -13,8 +13,7 @@ module.exports = (req, res) => {
     password: bcrypt.hashSync(req.body.password, 8)
   }).then(user => {
     res.status(201).json({
-      message: 'User was created successfully!',
-      user: user
+      message: 'User was created successfully!'
     });
   }).catch(err => {
     res.status(500).json({

@@ -68,5 +68,11 @@ Dokumentasi mengenai **bulkCreate** dapat diakses [di sini](https://sequelize.or
 - Ke file `app.js` komentari bagian `seed` dan `sync({force:true})` **ganti** menjadi `sync`
 - Buat file `config/auth.js` lakukan `export.module` **secret key** yang diambil dari file `.env`
 - Ke file `.env` buat `APP_KEY = secret-key`
-- Buat file `controller/user.controller.js` lakukan **import** terhadap `/model/index, db.user, bcrypt, config`
-- Lakukan `module.export` dan isi dengan `User.create()` terhadap `name, phone, email` dan `password` yang memakai fungsi `bcrypt.hasSync()`
+- Buat file `controller/auth.controller.js` lakukan **import** terhadap `/model/index, db.user, bcrypt, config`
+- Lakukan `exports.register` dan isi dengan `User.create()` terhadap `name, phone, email` dan `password` yang memakai fungsi `bcrypt.hasSync()`  
+
+### 2.2 Membuat Route Untuk Auth Register  
+- Buat file `/routes/auth.routes.js` Lakukan `require` terhadap `/controller/auth.controller.js`
+- Lakukan `module.exports` dan buat routes untuk **pengecekan** dengan middleware yang memeriksa **res.header()**
+- Buat `routes` **POST** `/api/auth/register` yang parameternya mengarah ke `controller.register`
+- Ke file `app.js` lakukan `require` file **Routes** dengan parameter `app`
