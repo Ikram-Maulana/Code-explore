@@ -87,4 +87,10 @@ Dokumentasi mengenai **bulkCreate** dapat diakses [di sini](https://sequelize.or
 - Ke file `/controller/auth.controller.js` lalu buat `exports.login`, kemudian isi dengan `User.findOne`
 - Lakukan **Pengecekan** apakah emailnya ada, passwordnya benar dengan `bcrypt.compareSync()`, kemudian **jika benar** kita assign `accessToken` menggunakan `jwt.sign()`
 - Jangan lupa lakukan `require` terhadap `jwt`
-- Ke file `/routes/auth.routes.js`, kemudian buat **routes baru** untuk **POST** `/api/auth/login`
+- Ke file `/routes/auth.routes.js`, kemudian buat **routes baru** untuk **POST** `/api/auth/login`  
+
+### 2.5 Mendapatkan Data Token Dari Login  
+- Buat file `/middleware/authJwt.js`, kemudian lakukan `require` terhadap `jwt` dan `config auth`
+- Buat **Function** `verifyToken()`, lalu buat **variabel token** yang isinya `req.headers['authorization']`
+- Lakukan **Pengkondisian** jika tidak ada token
+- Jika **ada** token gunakan `jwt.verify()` dan lakukan **Pengkondisian** apakah token valid atau tidak
