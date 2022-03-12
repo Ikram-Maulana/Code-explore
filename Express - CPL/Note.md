@@ -38,4 +38,13 @@ Dokumentasi mengenai `sequelize` dapat diakses [di sini](https://sequelize.org/)
 - Buat file `models/index.js` untuk **membundle** pemanggilan semua model agar **tersentralisasi**
 - Ke file `app.js` buat variabel `db` yang memanggil file **index di file model**
 - Lakukan `db.sync({force: true})` lalu **Kondisikan** jika error dan tidak
-- Sebelum dijalankan buat terlebih dahulu **Database** sesuai nama yang diberikan pada `.env`
+- Sebelum dijalankan buat terlebih dahulu **Database** sesuai nama yang diberikan pada `.env`  
+
+### 1.5 Menambahkan Model Yang Dibutuhkan  
+- Buat file `models/category.model.js` lakukan `module.export` yang memiliki parameter `sequelize dan Sequelize`
+- Lakukan `sequelize.define` dan buat **skema tabel dan kolom database** yang isinya `nama`
+- Buat file `models/product.model.js` lakukan `module.export` yang memiliki parameter `sequelize dan Sequelize`
+- Lakukan `sequelize.define` dan buat **skema tabel dan kolom database** yang isinya `user_id, category_id, title, brand, model, year, condition, price, description, address, loc_attitude, loc_longitude, sold`
+- Buat file `models/image.model.js` lakukan `module.export` yang memiliki parameter `sequelize dan Sequelize`
+- Lakukan `sequelize.define` dan buat **skema tabel dan kolom database** yang isinya `product_id, file`
+- Lakukan **pendefinisian** di file `models/index.js`
