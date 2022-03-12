@@ -50,8 +50,15 @@ Dokumentasi mengenai `sequelize` dapat diakses [di sini](https://sequelize.org/)
 - Lakukan **pendefinisian** di file `models/index.js`  
 
 ### 1.6 Membuat Modul Seed Untuk Import Dummy Data  
-- Buat file `models/seeds/user.seeder.js` lakukan **import** terhadap `index` model dan `user.model`
+- Buat file `models/seeds/user.seeder.js` lakukan **import** terhadap `index` model dan `db.user`
 - Lakukan `exports.namaSeed` dan isi dengan `User.create()`
 - Buat file `models/seeds/index.js` sebagai file untuk **membundle seeds**
-- Lakukan `require` terhadap `user.model.js` dan export
-- Ke file `app.js` buat require file `models/seeds/index` dalam **variable seed**, lalu lakukan `seed.namaSeed()` sebelum `console` **koneksi sukses**
+- Lakukan `require` terhadap `user.model.js` dan `export`
+- Ke file `app.js` buat require file `models/seeds/index` dalam **variable seed**, lalu lakukan `seed.namaSeed()` sebelum `console` **koneksi sukses**  
+
+### 1.7 Membuat Data Seeder Lainnya  
+Dokumentasi mengenai **bulkCreate** dapat diakses [di sini](https://sequelize.org/v5/manual/instances.html#working-in-bulk--creating--updating-and-destroying-multiple-rows-at-once-).
+- Buat file `models/seeds/category.seeder.js` lakukan **import** terhadap `index` model dan `db.category`
+- Lakukan `exports.namaSeed` dan isi dengan `Category.create()`
+- Ke file `models/seeds/index` Lakukan `require` terhadap `category.model.js` dan `export`
+- Ke file `app.js` lakukan `seed.namaSeed()` sebelum `console` **koneksi sukses**
