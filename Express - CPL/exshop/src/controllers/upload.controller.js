@@ -47,3 +47,45 @@ exports.upload = async (req, res) => {
     });
   }
 };
+
+// Delete file function
+exports.remove = (req, res) => {
+  const id = req.params.id;
+  Image.findByPk(id).then(result => {
+    fs.unlink(`${__basedir}/storage/upload/${result.file}`, err => {
+      if (err) {
+        res.status(500).json({
+          message: 'Error when deleting file',
+          error: err
+        });
+        return;
+      }
+
+      Image.destroy({
+        where: {
+          id: id
+        }
+      }).then(num => {
+        if (num == 1) {
+          res.status(200).json({
+            message: 'Image deleted successfully'
+          });
+        } else {
+          res.status(500).json({
+            message: `Cannot delete image with id ${id}`
+          });
+        }
+      }).catch(err => {
+        res.status(500).json({
+          message: 'Error when deleting file',
+          error: err
+        });
+      });
+    });
+  }).catch(err => {
+    res.status(500).json({
+      message: 'Error when getting image',
+      error: err
+    });
+  });
+};

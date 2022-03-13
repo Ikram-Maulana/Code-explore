@@ -148,3 +148,10 @@ Dokumentasi mengenai **bulkCreate** dapat diakses [di sini](https://sequelize.or
 - Isi dalam `try` lakukan `await uploadFile(req, res)`, **kondisi** jika `req.file === undefined`, buat **variabel images** yang melakukan `req.files.map()` yang berisi object image, lakukan `await Image.bulkCreate()` dan kondisi `then and catch`
 - Buat file `/routes/upload.routes.js` buat routing **POST** `/api/product/:id/upload` dengan parameter `middleware.verifyToken` dan `controller.upload`
 - Buka `app.js` lakukan **import** terhadap file `/routes/upload.routes.js`  
+
+### 4.3 Membuat Controller Remove File By Id  
+- Buka file `/controllers/upload.controller.js`, kemudian buat `exports.remove`
+- Buat **variable id** yang menampung `req.params.id`
+- Buat `Image.findByPk(id)`, kemudian lakukan `then and catch`
+- Dalam fungsi `then` lakukan `fs.unlink()` terhadap **direktori file** dan `Image.destroy()` menggunakan `where:{ id:id }`, kemudian lakukan `then and catch`
+- Ke file `/routes/upload.routes.js` buat routing **DELETE** `/api/image/:id` dengan parameter `middleware.verifyToken` dan `controller.upload`

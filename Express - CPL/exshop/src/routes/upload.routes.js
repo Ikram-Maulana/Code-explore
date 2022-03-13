@@ -10,4 +10,6 @@ module.exports = (app) => {
 
   // Post /api/product/:id/upload
   app.post('/api/product/:id/upload', middleware.verifyToken, controller.upload);
+  // Delete /api/image/:id
+  app.delete('/api/image/:id', middleware.verifyToken, controller.remove);
 };
