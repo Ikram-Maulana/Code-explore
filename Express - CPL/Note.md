@@ -161,4 +161,12 @@ Dokumentasi mengenai **bulkCreate** dapat diakses [di sini](https://sequelize.or
 Dokumentasi lengkap mengenai **Relasi** dapat diakses [di sini](https://sequelize.org/v7/manual/assocs.html).
 - Ke file `/models/index`, lakukan relasi menggunakan `hasMany()`, **User memiliki banyak Produk, Produk memiliki banyak Image, Category memiliki banyak Produk** menggunakan `foreignKey` masing-masing
 - Ke file `/controllers/product.controller.js`, lakukan require terhadap `db.image`
-- Tambahkan `include: Image` di **parameter** fungsi `index` setelah `where: { id:id }` dan `show`
+- Tambahkan `include: Image` di **parameter** fungsi `index` setelah `where: { id:id }` dan `show`  
+
+## 06 - Menampilkan Iklan Produk  
+### 6.1 Membuat Api Endpoint Menampilkan Ads Random  
+- Buat file `/controllers/ads.controller.js`, Lakukan `require` terhadap `db, db.product, db.image`
+- Buat `exports.random` yang isinya sama dengan `exports.index` di `product.controller.js`
+- Ubah `where id` menjadi `where sold`, tambahkan `limit` dan juga `order: db.sequelize.literal()` agar menampilkan ads secara random
+- Buat file `/routes/ads.routes.js`, lakukan `require` terhadap `/controllers/ads.controller.js`
+- Buat routes **GET** `/api/ads/random` yang memiliki parameter `controller.random`
