@@ -154,4 +154,11 @@ Dokumentasi mengenai **bulkCreate** dapat diakses [di sini](https://sequelize.or
 - Buat **variable id** yang menampung `req.params.id`
 - Buat `Image.findByPk(id)`, kemudian lakukan `then and catch`
 - Dalam fungsi `then` lakukan `fs.unlink()` terhadap **direktori file** dan `Image.destroy()` menggunakan `where:{ id:id }`, kemudian lakukan `then and catch`
-- Ke file `/routes/upload.routes.js` buat routing **DELETE** `/api/image/:id` dengan parameter `middleware.verifyToken` dan `controller.upload`
+- Ke file `/routes/upload.routes.js` buat routing **DELETE** `/api/image/:id` dengan parameter `middleware.verifyToken` dan `controller.upload`  
+
+## 05 - Relasi Antar Model  
+### 5.1 Membuat Relasi Antar Model  
+Dokumentasi lengkap mengenai **Relasi** dapat diakses [di sini](https://sequelize.org/v7/manual/assocs.html).
+- Ke file `/models/index`, lakukan relasi menggunakan `hasMany()`, **User memiliki banyak Produk, Produk memiliki banyak Image, Category memiliki banyak Produk** menggunakan `foreignKey` masing-masing
+- Ke file `/controllers/product.controller.js`, lakukan require terhadap `db.image`
+- Tambahkan `include: Image` di **parameter** fungsi `index` setelah `where: { id:id }` dan `show`

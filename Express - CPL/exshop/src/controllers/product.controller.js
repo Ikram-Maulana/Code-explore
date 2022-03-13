@@ -1,6 +1,7 @@
 // Requirement
 const db = require('../models/index');
 const Product = db.product;
+const Image = db.image;
 
 // Function
 // Show all product
@@ -8,7 +9,8 @@ exports.index = (req, res) => {
   Product.findAll({
     where: {
       user_id: req.userId
-    }
+    },
+    include: Image
   }).then(result => {
     res.status(200).json({
       message: 'Show all products successfully',
@@ -52,7 +54,9 @@ exports.create = (req, res) => {
 // Single show product
 exports.show = (req, res) => {
   const id = req.params.id;
-  Product.findByPk(id).then(result => {
+  Product.findByPk(id, {
+    include: Image
+  }).then(result => {
     // Checking
     if (result.user_id !== req.userId) {
       res.status(401).json({
