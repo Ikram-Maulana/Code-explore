@@ -41,7 +41,7 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.TEXT,
       allowNull: false
     },
-    loc_attitude: {
+    loc_latitude: {
       type: Sequelize.STRING,
       allowNull: false
     },
