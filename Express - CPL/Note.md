@@ -134,8 +134,17 @@ Dokumentasi mengenai **bulkCreate** dapat diakses [di sini](https://sequelize.or
 ### 4.1 Membuat Service Upload File Dengan Multer  
 - Buat folder `/storage/upload` di folder `root`
 - Buat file `/services/upload.js`, lakukan `require` terhadap `multer, util, path dan __basedir`
-- Lakukan **setup** pengkondisian `imageFilter` menggunakan `image.mimeType.startWith()`
+- Lakukan **setup** pengkondisian `imageFilter` menggunakan `image.mimetype.startsWith()`
 - Lakukan **setup** `storage` menggunakan `multer.diskStorage()`, isinya `destination` dan `filename`
 - Lakukan **Upload Image Setup** menggunakan `multer()`, isinya `storage` dan `fileFilter`
 - Lakukan `util.promisify()` dalam variabel `uploadFile` terhadap **uploadImage**
-- Lakukan `exports.module`
+- Lakukan `exports.module` terhadap `uploadFile dan __basedir` 
+
+### 4.2 Membuat Controller Upload File By Product  
+- Buat file `/controllers/upload.controller.js`, kemudian lakukan `require` terhadap `fs, {uploadFile, __basedir}, db, db.image`
+- Buat `exports.upload` secara `async`
+- Buat **variable id** yang menampung `req.params.id`
+- Lakukan `try and catch`
+- Isi dalam `try` lakukan `await uploadFile(req, res)`, **kondisi** jika `req.file === undefined`, buat **variabel images** yang melakukan `req.files.map()` yang berisi object image, lakukan `await Image.bulkCreate()` dan kondisi `then and catch`
+- Buat file `/routes/upload.routes.js` buat routing **POST** `/api/product/:id/upload` dengan parameter `middleware.verifyToken` dan `controller.upload`
+- Buka `app.js` lakukan **import** terhadap file `/routes/upload.routes.js`  

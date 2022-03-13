@@ -7,7 +7,7 @@ const __basedir = path.resolve();
 // Setup
 // Image Filter
 const imageFilter = (req, file, cb) => {
-  if (file.mimeType.startWith('image')) {
+  if (file.mimetype.startsWith('image')) {
     cb(null, true);
   } else {
     cb(new Error('File type is not image'), false);
@@ -34,4 +34,7 @@ const uploadImage = multer({
 let uploadFile = util.promisify(uploadImage);
 
 // Exports
-module.exports = uploadFile;
+module.exports = {
+  uploadFile,
+  __basedir
+};
