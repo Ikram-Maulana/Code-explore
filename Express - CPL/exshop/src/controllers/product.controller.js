@@ -54,7 +54,7 @@ exports.show = (req, res) => {
   const id = req.params.id;
   Product.findByPk(id).then(result => {
     // Checking
-    if(result.user_id !== req.userId) {
+    if (result.user_id !== req.userId) {
       res.status(401).json({
         message: "You don't have permission to access this product"
       });
@@ -64,6 +64,46 @@ exports.show = (req, res) => {
     res.status(200).json({
       message: 'Show product successfully',
       data: result
+    });
+  }).catch(err => {
+    res.status(500).json({
+      message: 'Error when getting product',
+      error: err
+    });
+  });
+};
+
+// Update Product 
+exports.update = (req, res) => {
+  const id = req.params.id;
+  Product.findByPk(id).then(result => {
+    // Checking
+    if (result.user_id !== req.userId) {
+      res.status(401).json({
+        message: "You don't have permission to access this product"
+      });
+      return;
+    }
+
+    Product.update(req.body, {
+      where: {
+        id: id
+      }
+    }).then(num => {
+      if (num == 1) {
+        res.status(200).json({
+          message: 'Product updated successfully'
+        });
+      } else {
+        res.status(400).json({
+          message: `Cannot update product with id ${id}`
+        });
+      }
+    }).catch(err => {
+      res.status(500).json({
+        message: 'Error when updating product',
+        error: err
+      });
     });
   }).catch(err => {
     res.status(500).json({
