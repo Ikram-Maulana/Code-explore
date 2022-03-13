@@ -16,4 +16,6 @@ module.exports = (app) => {
   app.get('/api/product/:id', middleware.verifyToken, controller.show);
   // PATCH /api/product/:id
   app.patch('/api/product/:id', middleware.verifyToken, controller.update);
+  // DELETE /api/product/:id
+  app.delete('/api/product/:id', middleware.verifyToken, controller.delete);
 };

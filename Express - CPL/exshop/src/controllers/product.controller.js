@@ -112,3 +112,43 @@ exports.update = (req, res) => {
     });
   });
 };
+
+// Delete Product
+exports.delete = (req, res) => {
+  const id = req.params.id;
+  Product.findByPk(id).then(result => {
+    // Checking
+    if (result.user_id !== req.userId) {
+      res.status(401).json({
+        message: "You don't have permission to access this product"
+      });
+      return;
+    }
+
+    Product.destroy({
+      where: {
+        id: id
+      }
+    }).then(num => {
+      if (num == 1) {
+        res.status(200).json({
+          message: 'Product deleted successfully'
+        });
+      } else {
+        res.status(400).json({
+          message: `Cannot delete product with id ${id}`
+        });
+      }
+    }).catch(err => {
+      res.status(500).json({
+        message: 'Error when deleting product',
+        error: err
+      });
+    });
+  }).catch(err => {
+    res.status(500).json({
+      message: 'Error when getting product',
+      error: err
+    });
+  });
+}

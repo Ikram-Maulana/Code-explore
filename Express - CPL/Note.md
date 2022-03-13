@@ -123,4 +123,9 @@ Dokumentasi mengenai **bulkCreate** dapat diakses [di sini](https://sequelize.or
 ### 3.4 Membuat Api Endpoint Update Product
 - Ke file `/controller/product.controller.js`, **duplikasi** method **show** lalu rubah sedikit
 - Setelah **pengecekan** `userId`, buat `Product.update()`
-- Ke file `/routes/product.routes.js` buat routing **PATCH** `/api/product/:id` dengan parameter `middleware.verifyToken` dan `controller.update`
+- Ke file `/routes/product.routes.js` buat routing **PATCH** `/api/product/:id` dengan parameter `middleware.verifyToken` dan `controller.update`  
+
+### 3.5 Membuat Api Endpoint Delete Product  
+- Ke file `/controller/product.controller.js`, **duplikasi** method **update** lalu rubah sedikit
+- Setelah **pengecekan** `userId`, buat `Product.destroy()`
+- Ke file `/routes/product.routes.js` buat routing **DELETE** `/api/product/:id` dengan parameter `middleware.verifyToken` dan `controller.update` 
