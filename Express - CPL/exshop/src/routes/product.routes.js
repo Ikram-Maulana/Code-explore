@@ -8,6 +8,8 @@ module.exports = (app) => {
     next();
   });
 
+  // Get /api/product
+  app.get('/api/product', middleware.verifyToken, controller.index);
   // POST /api/product
   app.post('/api/product', middleware.verifyToken, controller.create);
 };

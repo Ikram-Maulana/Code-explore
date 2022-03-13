@@ -108,4 +108,8 @@ Dokumentasi mengenai **bulkCreate** dapat diakses [di sini](https://sequelize.or
 - Buat `exports.create`, isi dengan **pengkondisian** jika `!req.body.title`, buat variabel yang menampung `req.userId, ...req.body`, kemudian lakukan `Product.create()`
 - Buat file `/routes/product.routes.js`, lakukan require terhadap `middleware` dan `controller`
 - Buat `module.exports` berisi routes **POST** `/api/product` dengan parameter `middleware.verifyToken dan controller.create`
-- Buka `app.js` lakukan **import** terhadap file `/routes/product.routes.js`
+- Buka `app.js` lakukan **import** terhadap file `/routes/product.routes.js`  
+
+### 3.2 Membuat Api Endpoint Show All Product
+- Buat `exports.index` yang menggunakan `Product.findAll()` dalam file `/controller/product.controller.js`
+- Buat Routes **GET** `/api/product` dengan parameter `middleware.verifyToken` dan `controller.index`
