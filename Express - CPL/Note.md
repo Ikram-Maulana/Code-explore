@@ -128,4 +128,14 @@ Dokumentasi mengenai **bulkCreate** dapat diakses [di sini](https://sequelize.or
 ### 3.5 Membuat Api Endpoint Delete Product  
 - Ke file `/controller/product.controller.js`, **duplikasi** method **update** lalu rubah sedikit
 - Setelah **pengecekan** `userId`, buat `Product.destroy()`
-- Ke file `/routes/product.routes.js` buat routing **DELETE** `/api/product/:id` dengan parameter `middleware.verifyToken` dan `controller.update` 
+- Ke file `/routes/product.routes.js` buat routing **DELETE** `/api/product/:id` dengan parameter `middleware.verifyToken` dan `controller.update`  
+
+## 04 - Upload Image Product  
+### 4.1 Membuat Service Upload File Dengan Multer  
+- Buat folder `/storage/upload` di folder `root`
+- Buat file `/services/upload.js`, lakukan `require` terhadap `multer, util, path dan __basedir`
+- Lakukan **setup** pengkondisian `imageFilter` menggunakan `image.mimeType.startWith()`
+- Lakukan **setup** `storage` menggunakan `multer.diskStorage()`, isinya `destination` dan `filename`
+- Lakukan **Upload Image Setup** menggunakan `multer()`, isinya `storage` dan `fileFilter`
+- Lakukan `util.promisify()` dalam variabel `uploadFile` terhadap **uploadImage**
+- Lakukan `exports.module`
