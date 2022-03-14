@@ -192,4 +192,43 @@ include: [
   }
 ]
 ```
-- Ke file `/routes/ads.routes.js` buat routes **GET** `/api/ads/:id/detail` dengan parameter `controller.detail`
+- Ke file `/routes/ads.routes.js` buat routes **GET** `/api/ads/:id/detail` dengan parameter `controller.detail`  
+
+### 4.3 Menampilkan Data Produk Berdasarkan Pencarian Judul Dan Lokasi  
+- Ke file `/controllers/ads.controller.js`, lakukan `require` terhadap `db.Sequelize.Op`
+- Buat `export.search`, yang berisi **Variabel** lat = `parseFloat(req.query.lat)`, lng = `parseFloat(req.query.lng)`, title = `req.query`
+- Buat **KONDISI** apakah ada title  
+```
+let condition = title ? {
+    title: {
+      [Op.like]: `%${title}%`
+    }
+  } : null;
+``` 
+- Lakukan `Product.findAll()` yang memiliki parameter  
+```
+{
+      attributes: {
+        include: [
+          [
+            db.sequelize.literal(
+              `6371 *
+              acos(cos(radians(${lat})) * cos(radians(loc_latitude)) *
+              cos(radians(${lng}) - radians(loc_longitude)) +
+              sin(radians(${lat})) * sin(radians(loc_latitude)))`
+            ),
+            'distance',
+          ],
+        ],
+      },
+      where: {
+        sold: false,
+        ...condition,
+      },
+      having: db.sequelize.where(db.sequelize.col('distance'), '<', 25),
+      order: db.sequelize.col('distance'),
+      limit: 10,
+      include: Image,
+}
+```
+- Ke file `/routes/ads.routes.js` dan buat routes **GET** `/api/ads/search`

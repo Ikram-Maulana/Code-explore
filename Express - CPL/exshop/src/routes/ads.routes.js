@@ -7,6 +7,8 @@ module.exports = (app) => {
     next();
   });
 
+  // Get /api/ads/search
+  app.get('/api/ads/search', controller.search);
   // Get /api/ads/random
   app.get('/api/ads/random', controller.random);
   // Get /api/ads/:id/detail
