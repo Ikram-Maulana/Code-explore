@@ -172,7 +172,7 @@ Dokumentasi lengkap mengenai **Relasi** dapat diakses [di sini](https://sequeliz
 - Buat routes **GET** `/api/ads/random` yang memiliki parameter `controller.random`
 - Jangan lupa lakukan `import routes` di file `app.js`  
 
-### 4.2 Menampilkan Detail Data Produk Dengan Relasi Image Dan User  
+### 6.2 Menampilkan Detail Data Produk Dengan Relasi Image Dan User  
 - Buka file `/models/index`, kemudian buat `db.product.belongsTo(db.user)`
 - Buka file `/controllers/ads.controller.js`, kemudian buat `exports.detail` yang isinya sama dengan `exports.show` di `product.controller.js` 
 - Lakukan `require` terhadap `db.user`
@@ -194,7 +194,7 @@ include: [
 ```
 - Ke file `/routes/ads.routes.js` buat routes **GET** `/api/ads/:id/detail` dengan parameter `controller.detail`  
 
-### 4.3 Menampilkan Data Produk Berdasarkan Pencarian Judul Dan Lokasi  
+### 6.3 Menampilkan Data Produk Berdasarkan Pencarian Judul Dan Lokasi  
 - Ke file `/controllers/ads.controller.js`, lakukan `require` terhadap `db.Sequelize.Op`
 - Buat `export.search`, yang berisi **Variabel** lat = `parseFloat(req.query.lat)`, lng = `parseFloat(req.query.lng)`, title = `req.query`
 - Buat **KONDISI** apakah ada title  
@@ -231,4 +231,12 @@ let condition = title ? {
       include: Image,
 }
 ```
-- Ke file `/routes/ads.routes.js` dan buat routes **GET** `/api/ads/search`
+- Ke file `/routes/ads.routes.js` dan buat routes **GET** `/api/ads/search`  
+
+## 07 - Service Tambahan
+### 7.1 Membuat Service Pagination  
+Dokumentasi **contoh** non officialnya dapat diakses [di sini](https://www.bezkoder.com/node-js-mongodb-pagination/).
+- Lakukan `create ads` terlebih dahulu sampai user memiliki **6 product**
+- Buat file `/services/pagination.js`, buat fungsi `getPagination` dan `getPaggingData`
+- Dalam fungsi `getPagination` buat **variabel limit** yang berisi `size ? +size : 3`, **variabel offset** yang berisi `page ? page * limit : 0`, lalu lakukan `return` terhadap `limit` dan `offset` 
+- Dalam fungsi `getPaggingData` buat **variabel destructive** `{count: totalItems, rows: data} = result`, **variabel currentPage** yang berisi `page ? +page + 1 : 0`, **variabel totalPage** yang berisi `Math.ceil(totalItems/limit)`, lalu lakukan `return` terhadap `totalItems, data, currentPage, totalPage`
