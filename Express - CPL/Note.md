@@ -239,4 +239,11 @@ Dokumentasi **contoh** non officialnya dapat diakses [di sini](https://www.bezko
 - Lakukan `create ads` terlebih dahulu sampai user memiliki **6 product**
 - Buat file `/services/pagination.js`, buat fungsi `getPagination` dan `getPaggingData`
 - Dalam fungsi `getPagination` buat **variabel limit** yang berisi `size ? +size : 3`, **variabel offset** yang berisi `page ? page * limit : 0`, lalu lakukan `return` terhadap `limit` dan `offset` 
-- Dalam fungsi `getPaggingData` buat **variabel destructive** `{count: totalItems, rows: data} = result`, **variabel currentPage** yang berisi `page ? +page + 1 : 0`, **variabel totalPage** yang berisi `Math.ceil(totalItems/limit)`, lalu lakukan `return` terhadap `totalItems, data, currentPage, totalPage`
+- Dalam fungsi `getPaggingData` buat **variabel destructive** `{count: totalItems, rows: data} = result`, **variabel currentPage** yang berisi `page ? +page + 1 : 1`, **variabel totalPage** yang berisi `Math.ceil(totalItems/limit)`, lalu lakukan `return` terhadap `totalItems, data, currentPage, totalPage`  
+
+### 7.2 Implementasi Pagination Service  
+-  Buka file `/controllers/product.controller.js`, lakukan require terhadap `{ getPaggination, getPaggingData }`
+-  Dalam **function** `exports.index` buat **variabel** `const {page, size} = req.query`, buat **variabel** `const {limit, offset} = getPaggination(page, size)`
+-  Ubah `Product.findAll()` menjadi `Product.findAndCountAll()`, lalu tambahkan **parameter** `limit` dan `offset`
+-  Di result tambahkan **variabel response** yang isinya `getPaggingData(result, page, limit)`
+-  Tambahkan di Json `...response`

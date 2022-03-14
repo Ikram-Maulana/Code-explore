@@ -16,7 +16,7 @@ const getPaggingData = (result, page, limit) => {
     count: totalItems,
     rows: data
   } = result;
-  const currentPage = page ? +page + 1 : 0;
+  const currentPage = page ? +page + 1 : 1;
   const totalPage = Math.ceil(totalItems / limit);
 
   return {

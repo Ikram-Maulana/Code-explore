@@ -2,19 +2,35 @@
 const db = require('../models/index');
 const Product = db.product;
 const Image = db.image;
+const {
+  getPagination, getPaggingData
+} = require('../services/pagination');
 
 // Function
 // Show all product
 exports.index = (req, res) => {
-  Product.findAll({
+  // Pagination
+  const {
+    page,
+    size
+  } = req.query;
+  const {
+    limit,
+    offset
+  } = getPagination(page, size);
+
+  Product.findAndCountAll({
     where: {
       user_id: req.userId
     },
+    limit,
+    offset,
     include: Image
   }).then(result => {
+    const response = getPaggingData(result, page, limit);
     res.status(200).json({
       message: 'Show all products successfully',
-      data: result
+      ...response
     });
   }).catch(err => {
     res.status(500).json({
