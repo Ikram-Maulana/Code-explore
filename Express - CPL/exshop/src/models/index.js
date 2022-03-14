@@ -16,6 +16,9 @@ db.product.belongsTo(db.user, {
 db.product.hasMany(db.image, {
   foreignKey: 'product_id'
 });
+db.image.belongsTo(db.product, {
+  foreignKey: 'product_id'
+});
 db.category.hasMany(db.product, {
   foreignKey: 'category_id'
 });

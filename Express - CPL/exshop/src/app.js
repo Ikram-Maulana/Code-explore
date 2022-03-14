@@ -2,6 +2,8 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const path = require('path');
+const __basedir = path.resolve();
 
 // Set Up
 const app = express();
@@ -10,6 +12,9 @@ app.use(express.json());
 app.use(express.urlencoded({
   extended: true
 }));
+// Static Image
+app.use(express.static('storage'));
+app.use('/img', express.static(__basedir + '/storage/upload'));
 
 let whiteList = ['http://localhost:8080']
 let corsOptions = {

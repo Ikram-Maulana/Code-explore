@@ -246,4 +246,11 @@ Dokumentasi **contoh** non officialnya dapat diakses [di sini](https://www.bezko
 -  Dalam **function** `exports.index` buat **variabel** `const {page, size} = req.query`, buat **variabel** `const {limit, offset} = getPaggination(page, size)`
 -  Ubah `Product.findAll()` menjadi `Product.findAndCountAll()`, lalu tambahkan **parameter** `limit` dan `offset`
 -  Di result tambahkan **variabel response** yang isinya `getPaggingData(result, page, limit)`
--  Tambahkan di Json `...response`
+-  Tambahkan di Json `...response`  
+
+### 7.3 Menambahkan Route Static File Gambar  
+- Buka file `app.js`, lalu lakukan `require` terhadap `path` dan `__basedir = path.resolve()`
+- Tambahkan **middleware** `app.use(express.static('storage'))` dan `app.use('/img', __basedir + express.static('/storage/upload'))`
+
+### 7.4 Menghapus Product Beserta Gambar
+- Bisa dikombinasikan fungsi-fungsinya
