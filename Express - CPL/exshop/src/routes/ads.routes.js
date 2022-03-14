@@ -9,4 +9,6 @@ module.exports = (app) => {
 
   // Get /api/ads/random
   app.get('/api/ads/random', controller.random);
+  // Get /api/ads/:id/detail
+  app.get('/api/ads/:id/detail', controller.detail);
 };

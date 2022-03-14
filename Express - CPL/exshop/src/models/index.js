@@ -10,6 +10,9 @@ db.image = require('../models/image.model')(db.sequelize, db.Sequelize);
 db.user.hasMany(db.product, {
   foreignKey: 'user_id'
 });
+db.product.belongsTo(db.user, {
+  foreignKey: 'user_id'
+});
 db.product.hasMany(db.image, {
   foreignKey: 'product_id'
 });

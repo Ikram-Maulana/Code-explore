@@ -170,3 +170,26 @@ Dokumentasi lengkap mengenai **Relasi** dapat diakses [di sini](https://sequeliz
 - Ubah `where id` menjadi `where sold`, tambahkan `limit` dan juga `order: db.sequelize.literal()` agar menampilkan ads secara random
 - Buat file `/routes/ads.routes.js`, lakukan `require` terhadap `/controllers/ads.controller.js`
 - Buat routes **GET** `/api/ads/random` yang memiliki parameter `controller.random`
+- Jangan lupa lakukan `import routes` di file `app.js`  
+
+### 4.2 Menampilkan Detail Data Produk Dengan Relasi Image Dan User  
+- Buka file `/models/index`, kemudian buat `db.product.belongsTo(db.user)`
+- Buka file `/controllers/ads.controller.js`, kemudian buat `exports.detail` yang isinya sama dengan `exports.show` di `product.controller.js` 
+- Lakukan `require` terhadap `db.user`
+- Hapus pengecekan `userId`, ubah `include: Image` menjadi  
+```
+include: [
+  {
+    model: Image,
+    as: 'images'
+  },
+  {
+    model: User,
+    as: 'user',
+    attributes: {
+      exclude: ['password', 'createdAt', 'updatedAt']
+    }
+  }
+]
+```
+- Ke file `/routes/ads.routes.js` buat routes **GET** `/api/ads/:id/detail` dengan parameter `controller.detail`
