@@ -16,4 +16,23 @@ Dokumentasi mengenai cara menginstall Nestjs secara global dapat diakses [di sin
 - Kita akan mencoba mengubah **port** aplikasi menggunakan **.env**, pertama install terlebih dahulu package `dotenv`
 - Buat file `.env` dan **instansiasi** `APP_PORT`
 - Ke file `main.ts` lakukan import terhadap `dotenv`, lalu buat `dotenv.config()` dan buat **variabel** untuk menampung **PORT** dari `process.env.APP_PORT`
-- Buat `Logger` untuk **menginformasikan** aplikasi berjalan di port berapa, lakukan `Logger.log()` dan `import Logger`
+- Buat `Logger` untuk **menginformasikan** aplikasi berjalan di port berapa, lakukan `Logger.log()` dan `import Logger`  
+
+## 03 - Koneksi Database  
+Dokumentasi lengkap mengenai cara integrasi **NestJS** dengan **Database** dapat diakses [di sini](https://docs.nestjs.com/techniques/database#database).
+- Install terlebih dahulu `@nestjs/typeorm, typeorm, mysql2`
+- Ke file `.env`, lakukan **instansiasi** terhadap `DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME`
+- Ke file `app.module.ts` tambahkan kode berikut dalam **imports**:
+```
+TypeOrmModule.forRoot({
+  type: 'mysql',
+  host: process.env.DB_HOST,
+  port: parseInt(process.env.DB_PORT),
+  username: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  entities: [],
+  synchronize: true,
+}),
+```
+- Jangan lupa untuk lakukan import terhadap `dotenv`, lalu buat `dotenv.config()`
