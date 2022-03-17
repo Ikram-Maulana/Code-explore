@@ -23,7 +23,7 @@ Dokumentasi lengkap mengenai cara integrasi **NestJS** dengan **Database** dapat
 - Install terlebih dahulu `@nestjs/typeorm, typeorm, mysql2`
 - Ke file `.env`, lakukan **instansiasi** terhadap `DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME`
 - Ke file `app.module.ts` tambahkan kode berikut dalam **imports**:
-```
+```ts
 TypeOrmModule.forRoot({
   type: 'mysql',
   host: process.env.DB_HOST,
@@ -35,4 +35,34 @@ TypeOrmModule.forRoot({
   synchronize: true,
 }),
 ```
+- Jangan lupa untuk lakukan import terhadap `dotenv`, lalu buat `dotenv.config()`  
+
+## 04 - Generate Table  
+Dokumentasi lengkap mengenai **memisahkan ormconfig** dapat diakses [di sini](https://docs.nestjs.com/techniques/database#typeorm-integration).  
+Dokumentasi lengkap mengenai **membuat module dan entitas** dapat diakses [di sini](https://docs.nestjs.com/techniques/database#repository-pattern). 
+- Ke file `main.ts` pindahkan isi dari `TypeOrmModule.forRoot()` ke file `~/ormconfig.js` dalam `module.exports`
 - Jangan lupa untuk lakukan import terhadap `dotenv`, lalu buat `dotenv.config()`
+- Tambahkan beberapa kode dibawah
+```js
+{
+logging: true,
+dropSchema: false,
+entities: ['src/**/*.entitiy.ts', 'dist/**/*.entity{.ts,.js}']
+},
+```
+- Lakukan `generate module` **fileKita** untuk membuat **skema** dengan mengetikkan kode berikut `nest generate mo fileKita`, nanti akan muncul file `/src/file-kita/file-kita.module.ts`
+- Buat file `/src/file-kita/file-kita.entity.ts`, lalu tambahkan kode dibawah:
+```ts
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+
+@Entity()
+export class FileKita {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  // Masukkan skema yang akan kita bangun
+}
+```
+- Ke file `/src/file-kita/file-kita.module.ts` lakukan import terhadap `{FileKita}` dan `TypeOrmModule`
+- Di dalam `@module` tambahkan kode `imports: [TypeOrmModule.forFeature([FileKita])]`
