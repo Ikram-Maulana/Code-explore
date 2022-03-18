@@ -65,4 +65,20 @@ export class FileKita {
 }
 ```
 - Ke file `/src/file-kita/file-kita.module.ts` lakukan import terhadap `{FileKita}` dan `TypeOrmModule`
-- Di dalam `@module` tambahkan kode `imports: [TypeOrmModule.forFeature([FileKita])]`
+- Di dalam `@module` tambahkan kode `imports: [TypeOrmModule.forFeature([FileKita])]`  
+
+## 05 - Controller & Services  
+Dokumentasi lengkap mengenai **Controller** dapat diakses [di sini](https://docs.nestjs.com/controllers#controllers).  
+Dokumentasi lengkap mengenai **Services** dapat diakses [di sini](https://docs.nestjs.com/providers#services).
+- **Buat file controller** dengan mengetikkan command berikut `nest generate co fileKita`
+- Tambahkan beberapa **routing** seperti
+```ts
+@Get()
+lihatOutput(): string {
+  return 'Ini controller file-kita';
+}
+```
+- **Buat file service** dengan mengetikkan command berikut `nest generate s fileKita`
+- buka file **file-kita.controller.ts** lakukan **import** terhadap file **service**, lalu buat `constructor(private fileKitaService: FileKitaService){}`
+- **Buat routing** ke file service yang isinya `this.fileKitaService.lihatSemua()`
+- Ke file `file-kita.service.ts` buat fungsi `lihatSemua` secara `asynchronous` yang me `return 'Ini service file-kita`
