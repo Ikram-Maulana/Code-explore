@@ -81,4 +81,15 @@ lihatOutput(): string {
 - **Buat file service** dengan mengetikkan command berikut `nest generate s fileKita`
 - buka file **file-kita.controller.ts** lakukan **import** terhadap file **service**, lalu buat `constructor(private fileKitaService: FileKitaService){}`
 - **Buat routing** ke file service yang isinya `this.fileKitaService.lihatSemua()`
-- Ke file `file-kita.service.ts` buat fungsi `lihatSemua` secara `asynchronous` yang me `return 'Ini service file-kita`
+- Ke file `file-kita.service.ts` buat fungsi `lihatSemua` secara `asynchronous` yang me `return 'Ini service file-kita`  
+
+## 06 - Read Data
+Dokumentasi lengkap mengenai **repositories** dapat diakses [di sini](https://docs.nestjs.com/recipes/mikroorm#repositories).
+- Ke file `file-kita.service.ts` lakukan `import` terhadap `entity`
+- Lakukan `constructor(){}` dengan `InjectRepository` dan konfigurasi seperti di bawah
+```ts
+@InjectRepository(FileKita)
+private fileKitaRepository: Repository<FileKita>,
+```
+- Buat fungsi `getAll()` dan isi dengan `return this.fileKitaRepository.find()`
+- Ke file `file-kita.controller.ts`, lakukan **routing** `lihatOutput()` ke `this.fileKitaService.getAll()`
