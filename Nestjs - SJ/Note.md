@@ -106,4 +106,9 @@ Dokumentasi lengkap mengenai **CRUD** menggunakan nestjs dapat diakses [di sini]
 const fileKitaNew = this.fileKitaRepository.create(data);
 await this.fileKitaRepository.save(fileKitaNew);
 return fileKitaNew;
-```
+```  
+
+08 - Mengambil 1 baris data  
+- Ke file `file-kita.controller.ts`, ganti routes **GET lihatDetail()** menjadi `return this.fileKitaService.getOneData(id)`
+- Kita **buat fungsinya**, ke file `file-kita.services.ts` dan buat fungsi `getOneData(id: string)`
+- Isi fungsi tadi dengan `return this.fileKitaRepository.findOne({ where: { id } })`
