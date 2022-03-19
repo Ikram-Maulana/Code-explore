@@ -114,11 +114,21 @@ return fileKitaNew;
 - Isi fungsi tadi dengan `return this.fileKitaRepository.findOne({ where: { id } })`  
 
 09 - Update Data  
-- Ke file `file-kita.controller.ts`, buat routes **PATCH(':id') update(@Body() data: Partial\<fileKitaDto>)** dan isi dengan `return this.fileKitaService.update(id, data)`
+- Ke file `file-kita.controller.ts`, buat routes **PATCH(':id') update(@Param id: string, @Body() data: Partial\<fileKitaDto>)** dan isi dengan `return this.fileKitaService.update(id, data)`
 - Kita **buat fungsinya**, ke file `file-kita.services.ts` dan buat fungsi `update(id: string, data: Partial<fileKitaDto>)`
 - Isi fungsi tadi dengan 
 ```ts
 const fileKita = await this.fileKitaRepository.findOne({ where: { id } });
 await this.fileKitaRepository.update(id, data);
 return fileKita;
-```
+```  
+
+## 10 - Menghapus Data  
+- Ke file `file-kita.controller.ts`, buat routes **DELETE(':id') delete(@Param id: string)** dan isi dengan `return this.fileKitaService.delete(id)`
+- Kita **buat fungsinya**, ke file `file-kita.services.ts` dan buat fungsi `delete(id: string)`
+- Isi fungsi tadi dengan 
+```ts
+const fileKita = await this.fileKitaRepository.findOne({ where: { id } });
+await this.fileKitaRepository.delete(id);
+return fileKita;
+```  
