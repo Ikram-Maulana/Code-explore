@@ -161,4 +161,27 @@ Logger.error(
   JSON.stringify(errorResponse),
   'ExceptionFilter',
 );
+```  
+
+## 12 - Membuat Page Tampil Data  
+Dokumentasi lengkap mengenai **MVC** dapat diakses [di sini](https://docs.nestjs.com/techniques/mvc).  
+- Install terlebih dahulu `template engine` yang akan digunakan `pnpm add ejs`
+- Ke file `main.ts` tambahkan kode dibawah, jangan lupa tambahkan `<NestExpressApplication>`
+```ts
+app.useStaticAssets(join(__dirname, '..', 'public'));
+app.setBaseViewsDir(join(__dirname, '..', 'views'));
+app.setViewEngine('ejs');
 ```
+- Buat file `views/index.ejs`
+- Pergi ke file `file-kita.controller.ts` ubah routes index menjadi `jsondata` dan ubah menjadi `async await`, isinya buat dalam **object data**
+- Buat **routes index** baru dengan kode di bawah
+```ts
+// Index
+@Get()
+@Render('file-kita/index')
+root() {
+  return { message: 'Hello world!', title: 'Index FileKita' };
+}
+```
+- Ke file `index.ejs`, lakukan pemanggilan terhadap data yang di parsing di **controller**
+- Masukkan `jsondata` dalam `ajax dataTable`
