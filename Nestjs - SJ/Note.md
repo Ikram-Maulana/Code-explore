@@ -111,4 +111,14 @@ return fileKitaNew;
 08 - Mengambil 1 baris data  
 - Ke file `file-kita.controller.ts`, ganti routes **GET lihatDetail()** menjadi `return this.fileKitaService.getOneData(id)`
 - Kita **buat fungsinya**, ke file `file-kita.services.ts` dan buat fungsi `getOneData(id: string)`
-- Isi fungsi tadi dengan `return this.fileKitaRepository.findOne({ where: { id } })`
+- Isi fungsi tadi dengan `return this.fileKitaRepository.findOne({ where: { id } })`  
+
+09 - Update Data  
+- Ke file `file-kita.controller.ts`, buat routes **PATCH(':id') update(@Body() data: Partial\<fileKitaDto>)** dan isi dengan `return this.fileKitaService.update(id, data)`
+- Kita **buat fungsinya**, ke file `file-kita.services.ts` dan buat fungsi `update(id: string, data: Partial<fileKitaDto>)`
+- Isi fungsi tadi dengan 
+```ts
+const fileKita = await this.fileKitaRepository.findOne({ where: { id } });
+await this.fileKitaRepository.update(id, data);
+return fileKita;
+```
