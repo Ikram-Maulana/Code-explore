@@ -92,4 +92,18 @@ Dokumentasi lengkap mengenai **repositories** dapat diakses [di sini](https://do
 private fileKitaRepository: Repository<FileKita>,
 ```
 - Buat fungsi `getAll()` dan isi dengan `return this.fileKitaRepository.find()`
-- Ke file `file-kita.controller.ts`, lakukan **routing** `lihatOutput()` ke `this.fileKitaService.getAll()`
+- Ke file `file-kita.controller.ts`, lakukan **routing** `lihatOutput()` ke `this.fileKitaService.getAll()`  
+
+## 07 - Post Data  
+Dokumentasi lengkap mengenai **CRUD** menggunakan nestjs dapat diakses [di sini](https://docs.nestjs.com/recipes/crud-generator#crud-generator).
+- Buat file `file-kita.dto.ts` isi dengan `export class` yang berisi `schema`
+- Ke file `file-kita.controller.ts` lakukan import terhadap file `dto`
+- Buat `routing` **POST** dengan parameter `@Body data: FileKitaDTO`, kemudian lakukan `return` ke `this.FileKitaService.create()` 
+- Ke file `file-kita.service.ts` lakukan **import** terhadap file `dto`
+- Buat fungsi `create()` dengan **parameter** `data: FileKitaDTO`
+- Kemudian lakukan `create` dan `save` data dengan kode di bawah
+```ts
+const fileKitaNew = this.fileKitaRepository.create(data);
+await this.fileKitaRepository.save(fileKitaNew);
+return fileKitaNew;
+```
