@@ -132,3 +132,33 @@ const fileKita = await this.fileKitaRepository.findOne({ where: { id } });
 await this.fileKitaRepository.delete(id);
 return fileKita;
 ```  
+
+## 11 - Custom Error
+Dokumentasi lengkap mengenai **exception filters** dapat diakses [di sini](https://docs.nestjs.com/exception-filters#exception-filters-1).
+- Buat file filter dengan mengetikkan `nest generate f http-error`, buat folder **shared** pindahkan file hasil generate **ke folder shared**, isinya dapat dilihat di **dokumentasi**
+- Ke file `app.module.ts`, lakukan import terhadap `./shared/http-error.filter.ts`
+- Pada `@module providers` tambahkan kode berikut, dokumentasinya dapat diakses [di sini](https://docs.nestjs.com/exception-filters#binding-filters). 
+```ts
+{
+  provide: APP_FILTER,
+  useClass: HttpErrorFilter,
+},
+```
+- Coba **abstraksi** providersnya dalam variabel `errorResponse`, lalu ganti `json`
+```ts
+const errorResponse = {
+  statusCode: status,
+  timestamp: new Date().toLocaleDateString(),
+  path: request.url,
+  method: request.method,
+  message: exception.message || null,
+};
+```
+- Buat `logger` untuk **sistem**
+```ts
+Logger.error(
+  `${request.method} ${request.url}`,
+  JSON.stringify(errorResponse),
+  'ExceptionFilter',
+);
+```
