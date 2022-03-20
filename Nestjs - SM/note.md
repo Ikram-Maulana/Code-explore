@@ -28,4 +28,17 @@ Dokumentasi lengkap mengenai NestJS dapat diakses [di sini](https://nestjs.com/)
 - Restful API
 - JWT (Json Web Token)
 - Best Practice
-- Unit Testing
+- Unit Testing  
+
+## 02 - Instalasi NestJS  
+- NodeJS (>= 10.13.0)
+- CLI untuk installasi
+```bash
+$ npm i -g @nestjs/cli
+# or
+$ yarn global add @nestjs/cli
+
+$ nest new project-name
+```
+- **Buka** folder project dalam code editor favorit
+- **Hapus** beberapa file seperti `app.controller.spec.ts, app.controller.ts, dan app.service.ts` dan beberapa `import` di `app.module.ts`
