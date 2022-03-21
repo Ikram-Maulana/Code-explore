@@ -52,7 +52,7 @@ $ nest new project-name
 - Untuk membuat module, class diberikan decorator **@Module()**, decorator ini bertugas untuk memberikan metadata pada module yang digunakan oleh NestJS untuk mengorganisir project
 - Kita dapat membuat module menggunakan NestJS CLI  
 ```bash
-nest g module Users 
+$ nest g module Users 
 ```
 ### 3.2 Property Module  
 | Property    | Deskripsi                                                                                                                    |
@@ -70,4 +70,51 @@ nest g module Users
 - Buat file `books.module.ts` dengan mengetikkan perintah
 ```bash
 nest g mo Books
+```  
+
+## 04 - NestJS Controller  
+- Controller bertugas untuk menerima request dari client dan memberikan response ke client
+- Setiap controller bertugas untuk menerima data dari endpoint tertentu, seperti **"/users"** dengan method tertentu seperti **GET, POST, PATCH, PUT,** dan **DELETE**
+- Controller akan menggunakan provider yang telah didaftarkan pada module  
+### 4.1 Membuat Controller
+- Untuk membuat controller, kita harus memberikan decorator **@Controller()** pada suatu class
+- Parameter yang diisi pada decorator **@Controller()** adalah string base path dari controller tersebut
+- Dengan NestJS CLI
+```bash
+$ nest g controller Users
+```
+### 4.2 Project Overview
+- Application Module
+  - User Module
+    - User Controller
+  - Auth Module
+    - Auth Controller
+  - Book Module
+    - Book Controller
+### 4.3 Coding Time
+- Buat controller `books.controller.js` dengan CLI
+```bash
+$ nest g co Books
+```
+- Hapus terlebih dahulu file `books.controller.spec.ts`
+- Ke file `books.controller.ts` buat **routes** `@GET()`
+- Untuk menjalankan project gunakan CLI
+```bash
+pnpm start:dev
+```
+- Untuk lihat **PORT** bisa akses `main.ts`
+- Coba ubah method `@GET()` untuk mengambil parameter `:name`
+```ts
+@Get('/:name')
+hello(@Param('name') name: string) {
+  return `Hello ${name}!`;
+}
+```
+- Buat routes `@Post()` yang mengambil `@Body() payload:any`
+- Untuk mengambil salah satu data saja, ubah `payload` menjadi nama data yang ingin diambil, masukkan juga sebagai parameter dalam `@Body()`
+```ts
+@Post()
+createBook(@Body('name') name: string) {
+  return name;
+}
 ```
