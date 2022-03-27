@@ -117,4 +117,168 @@ hello(@Param('name') name: string) {
 createBook(@Body('name') name: string) {
   return name;
 }
+```  
+
+## 05 - NestJS Providers  
+- Provider merupakan komponen penting pada NestJS
+- Provider biasanya digunakan sebagai **Service, Repository, Factory, Helper,** dan lain-lain
+- NestJS akan meng-inject provider ke module yang menggunakan provider tersebut (**Dependency Injection**), sehingga provider tersebut dapat digunakan di seluruh tempat di module tersebut (contoh: **Controller, Provider lain**)
+### 5.1 Project Overview
+- Application Module
+  - User Module
+    - User Controller
+    - User Service
+  - Auth Module
+    - Auth Controller
+    - Auth Service
+  - Book Module
+    - Book Controller
+    - Book Service
+### 5.2 Coding Time
+### **01 Get All Books**
+- Buat file `books.service.ts` dengan mengetikkan
+```bash
+nest g service Books
+```
+- Hapus file `books.service.spec.ts` dan semua routing sebelumnya di `books.controller.ts`
+- Buat routing baru **GET** `getAllBooks()`, sebelum mengisi ke file `books.service.ts` terlebih dahulu
+- Tambahkan kode dibawah
+```ts
+private books: any[] = [];
+
+getAllBooks(): any {
+  return this.books;
+}
+```
+- Ke file `books.controller.ts` tambahkan kode di bawah
+```ts
+constructor(private booksServices: BooksService) {}
+
+@Get()
+getAllBooks() {
+  return this.booksServices.getAllBooks();
+}
+```
+#### **02 Create Books**  
+- Ke file `books.controller.ts`, tambah routes **POST** `createBook()` yang mengambil `Body()` title, author dan category
+```ts
+@Post()
+createBook(
+  @Body('title') title: string,
+  @Body('author') author: string,
+  @Body('category') category: string,
+) {
+  this.booksServices.createBook(title, author, category);
+}
+```
+- Ke file `book.service.ts`, lalu tambahkan function `createBook` seperti di bawah ini  
+```ts
+createBook(title: string, author: string, category: string): any {
+  const book = { title, author, category };
+  this.books.push(book);
+  return book;
+}
+```
+- Karena belum memiliki `id` yang dibuat otomatis maka tambahkan library `uuid`
+- lakukan import `uuid` di `books.service.ts` dan tambahkan di **variabel book**
+```ts
+const book = { id: uuidv4(), title, author, category };
+```  
+#### **03 Update Books**
+- Ke file `books.controller.ts`, tambah routes **PUT** `updateBook()` yang mengambil `Param()` id, dan `Body()` title, author dan category
+```ts
+@Put(':id')
+updateBook(
+  @Param('id') bookId: string,
+  @Body('title') title: string,
+  @Body('author') author: string,
+  @Body('category') category: string,
+) {
+  this.booksServices.updateBook(bookId, title, author, category);
+}
+```  
+- Ke file `book.service.ts`, lalu tambahkan function `updateBook`, tapi sebelum itu tambahkan terlebih dahulu function `findBookById` seperti di bawah ini 
+```ts
+findBookById(bookId: string): any {
+  const bookIdx = this.books.findIndex((book) => book.id === bookId);
+  if (bookIdx === -1) {
+    throw new NotFoundException(`Book with id ${bookId} not found`);
+  }
+  return bookIdx;
+}
+```
+- Lalu buat function `updateBook` seperti kode di bawah
+```ts
+updateBook(bookId: string, title: string, author: string, category: string) {
+  const bookIdx = this.findBookById(bookId);
+  const book = this.books[bookIdx];
+  book.title = title;
+  book.author = author;
+  book.category = category;
+  return book;
+}
+```
+#### **04 getBookById**
+- Ke file `books.controller.ts`, tambah routes **GET** `getBookById()` yang mengambil `Param()` id seperti kode di bawah
+```ts
+@Get(':id')
+getBookById(@Param('id') bookId: string) {
+  return this.booksServices.getBookById(bookId);
+}
+```  
+- Ke file `book.service.ts`, lalu tambahkan function `getBookById()`
+```ts
+getBookById(bookId: string): any {
+  const bookIdx = this.findBookById(bookId);
+  const book = this.books[bookIdx];
+  return book;
+}
+```  
+#### **05 deleteBook**
+- Ke file `books.controller.ts`, tambah routes **DELETE** `deleteBook()` yang mengambil `Param()` id seperti kode di bawah
+```ts
+@Delete('/:id')
+deleteBook(@Param('id') bookId: string) {
+  this.booksServices.deleteBook(bookId);
+}
+```  
+- Ke file `book.service.ts`, lalu tambahkan function `deleteBook()`
+```ts
+deleteBook(bookId: string): any {
+  const bookIdx = this.findBookById(bookId);
+  const book = this.books[bookIdx];
+  this.books.splice(bookIdx, 1);
+  return book;
+}
+```
+#### **06 Mengubah getAllBooks menjadi filter getBooks berdasarkan Query**
+- Ke file `books.controller.ts`, ubah routes **GET** `getAllBook()` menjadi `getBook()` mengambil `Query()` title, author dan category seperti kode di bawah
+```ts
+@Get()
+getBooks(
+  @Query('title') title: string,
+  @Query('author') author: string,
+  @Query('category') category: string,
+) {
+  return this.booksServices.getBooks(title, author, category);
+}
+```
+- Ke file `book.service.ts`, lalu ubah function `getAllBooks()` menjadi `getBooks()`, lakukan kondisi filter dalam **variabel books**
+```ts
+getBooks(title: string, author: string, category: string): any {
+  const books = this.books.filter((book) => {
+    let isMatch = true;
+    if (title && book.title !== title) {
+      isMatch = false;
+    }
+    if (author && book.author !== author) {
+      isMatch = false;
+    }
+    if (category && book.category !== category) {
+      isMatch = false;
+    }
+    return isMatch;
+  });
+  return books;
+}
 ```
