@@ -281,4 +281,198 @@ getBooks(title: string, author: string, category: string): any {
   });
   return books;
 }
+```  
+
+## 06 - DTO dan Validations  
+### 6.1 NestJs Pipe
+- Merupakan sebuah class yang bertugas untuk melakukan **transformasi** atau **validasi argument** yang akan di proses oleh route handler
+- Pipe dapat mengembalikan data asli atau data yang sudah dimodifikasi ke route handler
+- Jika proses validasi gagal, pipes akan menghentikan prosesnya di sana dan melempar eksepsi (**Throw Exception**)
+- Eksepsi yang dilempar akan diproses oleh NestJS dan dijadikan error response (**bukan internal server error**)
+### 6.2 Pipes yang tersedia
+- **ValidationPipe**
+- ParseIntPipe
+- ParseFloatPipe
+- ParseBoolPipe
+- ParseArrayPipe
+- ParseUUIDPipe
+- ParseEnumPipe
+- DefaultValuePipe
+### 6.3 Cara Membuat Pipes
+- Tambahkan decorator **@Injectable()** pada class dan implement interface **PipeTransform**
+### 6.4 Cara Menggunakan Pipes
+- Global Scope Pipe
+- Handler Scope Pipe
+- Parameter Scope Pipe
+### 6.5 DTO (Data Transfer Object)
+- Untuk membungkus menjadi struktur yang kita inginkan
+### 6.6 Coding Time
+#### **01 Membuat DTO**
+- Buat terlebih dahulu file `dto/create-book.dto.ts`, isi dengan stuktur title, author, category, year seperti kode di bawah
+```ts
+export class CreateBookDto {
+  title: string;
+  author: string;
+  category: string;
+  year: string;
+}
+```
+> Sebaiknya DTO dibuat terpisah tiap request, agar memudahkan jika sewaktu-waktu ada perubahan  
+- Ke file `book.controller.ts`, lakukan **implementasi CreateBookDto**, ubah kode createbook sebelumnya menjadi seperti kode di bawah 
+```ts
+@Post()
+createBook(@Body() payload: CreateBookDto) {
+  this.booksServices.createBook(payload);
+}
+```
+- Begitujuga ubah function createBook di file `book.service.ts` seperti kode di bawah
+```ts
+createBook(createBookDto: CreateBookDto) {
+  const { title, author, category, year } = createBookDto;
+  const book = { id: uuidv4(), title, author, category, year };
+  this.books.push(book);
+  return book;
+}
+```
+- Buat file `dto/update-book.dto.ts` isi dengan stuktur title, author, category, year seperti kode di bawah  
+```ts
+export class UpdateBookDto {
+  title: string;
+  author: string;
+  category: string;
+  year: string;
+}
+```
+- Ke file `book.controller.ts`, lakukan **implementasi UpdateBookDto**, ubah kode updateBook sebelumnya menjadi seperti kode di bawah 
+```ts
+@Put('/:id')
+updateBook(@Param('id') bookId: string, @Body() payload: UpdateBookDto) {
+  this.booksServices.updateBook(bookId, payload);
+}
+```
+- Begitujuga ubah function updateBook di file `book.service.ts` seperti kode di bawah
+```ts
+updateBook(bookId: string, updateBookDto: UpdateBookDto) {
+  const { title, author, category, year } = updateBookDto;
+  const bookIdx = this.findBookById(bookId);
+  const book = this.books[bookIdx];
+  book.title = title;
+  book.author = author;
+  book.category = category;
+  book.year = year;
+  return book;
+}
+```  
+#### **02 Membuat Validasi**
+Dokumentasi lengkap mengenai cara membuat pipe **class validator** dapat diakses [di sini](https://docs.nestjs.com/pipes#class-validator).  
+Dokumentasi lengkap mengenai penggunaan **class-validator** dapat diakses [di sini](https://github.com/typestack/class-validator#usage).
+- install terlebih dahulu library `class-validator` dan `class-transformer`
+#### **02.1 Global Scope Pipe**
+- Ke file `create-book.dto.ts` dan `update-book.dto.ts` tambahkan **class validator** `@Isnull()`, `@IsInt()` dan **class-transform** `@Type(() => number)`  
+```ts
+import { IsInt, IsNotEmpty } from 'class-validator';
+import { Type } from 'class-transformer';
+
+export class CreateBookDto/UpdateBookDto {
+  @IsNotEmpty()
+  title: string;
+
+  @IsNotEmpty()
+  author: string;
+
+  @IsNotEmpty()
+  category: string;
+
+  @IsNotEmpty()
+  @IsInt()
+  @Type(() => Number)
+  year: string;
+}
+```
+- Ke file `main.ts` tambahkan `app.useGlobalPipes()` seperti kode di bawah
+```ts
+app.useGlobalPipes(new ValidationPipe());
+```
+#### **02.2 Only for Some Routes Pipe**  
+- Ke file `main.ts` hapus terlebih dahulu kode di bawah
+```ts
+app.useGlobalPipes(new ValidationPipe());
+```
+- Ke file `books.controller.ts` tambahkan **ValidationPipe** ke routing yang **diinginkan**, misalnya di **updateBook** 
+```ts
+@Put('/:id')
+@UsePipes(ValidationPipe)
+updateBook(@Param('id') bookId: string, @Body() payload: UpdateBookDto) {
+  this.booksServices.updateBook(bookId, payload);
+}
+```  
+#### **02.3 Parameter Scope Pipe**  
+- Sebelum melanjutkan, hapus setelan **Global Scope Pipe** atau **Only for Some Routes Pipe**
+- ke file `books.controller.ts` coba kita buat contohnya
+```ts
+@Post()
+createBook(@Body('year', parseIntPipe) year: number) {
+  console.log({ year }) // year akan berubah menjadi int
+}
+```
+> **Global Scope Pipe** merupakan best practice untuk membuat pipe validation
+#### **02.4 Make Validation and DTO for Filter Book**
+- Buat file `dto/filter-book.dto.ts` dan isi dengan `title, author, category, min_year dan max_year` tambahkan **class validator** `@IsOptional()`, `@IsInt()` dan **class-transform** `@Type(() => number)` seperti kode di bawah  
+```ts
+import { Type } from 'class-transformer';
+import { IsInt, IsOptional } from 'class-validator';
+
+export class FilterBookDto {
+  @IsOptional()
+  title: string;
+
+  @IsOptional()
+  author: string;
+
+  @IsOptional()
+  category: string;
+
+  @IsOptional()
+  @IsInt()
+  @Type(() => Number)
+  min_year: string;
+
+  @IsOptional()
+  @IsInt()
+  @Type(() => Number)
+  max_year: string;
+}
+```
+- Ke file `book.controller.ts`, lakukan **implementasi getBooks**, ubah kode getBooks sebelumnya menjadi seperti kode di bawah 
+```ts
+@Get()
+getBooks(@Query() filter: FilterBookDto) {
+  return this.booksServices.getBooks(filter);
+}
+```  
+- Begitujuga ubah function getBooks di file `book.service.ts` seperti kode di bawah
+```ts
+getBooks(filter: FilterBookDto): any[] {
+  const { title, author, category, min_year, max_year } = filter;
+  const books = this.books.filter((book) => {
+    if (title && book.title !== title) {
+      return false;
+    }
+    if (author && book.author !== author) {
+      return false;
+    }
+    if (category && book.category !== category) {
+      return false;
+    }
+    if (min_year && book.year < min_year) {
+      return false;
+    }
+    if (max_year && book.year > max_year) {
+      return false;
+    }
+
+    return true;
+  });
+  return books;
+}
 ```
