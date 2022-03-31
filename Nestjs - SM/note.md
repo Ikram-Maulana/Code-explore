@@ -314,7 +314,7 @@ export class CreateBookDto {
   title: string;
   author: string;
   category: string;
-  year: string;
+  year: number;
 }
 ```
 > Sebaiknya DTO dibuat terpisah tiap request, agar memudahkan jika sewaktu-waktu ada perubahan  
@@ -340,7 +340,7 @@ export class UpdateBookDto {
   title: string;
   author: string;
   category: string;
-  year: string;
+  year: number;
 }
 ```
 - Ke file `book.controller.ts`, lakukan **implementasi UpdateBookDto**, ubah kode updateBook sebelumnya menjadi seperti kode di bawah 
@@ -386,7 +386,7 @@ export class CreateBookDto/UpdateBookDto {
   @IsNotEmpty()
   @IsInt()
   @Type(() => Number)
-  year: string;
+  year: number;
 }
 ```
 - Ke file `main.ts` tambahkan `app.useGlobalPipes()` seperti kode di bawah
@@ -435,12 +435,12 @@ export class FilterBookDto {
   @IsOptional()
   @IsInt()
   @Type(() => Number)
-  min_year: string;
+  min_year: number;
 
   @IsOptional()
   @IsInt()
   @Type(() => Number)
-  max_year: string;
+  max_year: number;
 }
 ```
 - Ke file `book.controller.ts`, lakukan **implementasi getBooks**, ubah kode getBooks sebelumnya menjadi seperti kode di bawah 
@@ -474,5 +474,259 @@ getBooks(filter: FilterBookDto): any[] {
     return true;
   });
   return books;
+}
+```
+
+## 07 - Integrasi NestJS dengan TypeORM
+### 7.1 Apa itu TypeORM?
+- TypeORM adalah sebuah **ORM** (Object Relational Mapping) yang dapat berjalan pada **NodeJS, Browser, Cordova, PhoneGap, Ionic, React Native, Native Script, Expo,** dan **Electron**.
+- TypeORM mendukung **TypeScript** dan **Javascript** (ES5, ES6, ES7, ES8)
+- TypeORM mendukung **Active Record** dan **Data Mapper**
+- Dokumentasi lengkap mengenai Typeorm dapat diakses di sini [https://typeorm.io/](https://typeorm.io/)
+### 7.2 Coding Time
+Dokumentasi lengkap mengenai **typeorm** database pada **nestjs** dapat diakses [di sini](https://docs.nestjs.com/techniques/database#database)
+#### **01 Konfigurasi**
+- Lakukan installasi library **@nestjs/typeorm, typeorm dan mysql2**
+```bash
+$ pnpm add @nestjs/typeorm typeorm@0.2 mysql2 -D
+```
+- Buat file `config/typeorm.config.ts`, isi dengan configurasi database
+```ts
+import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+
+export const typeOrmConfig: TypeOrmModuleOptions = {
+type: 'mysql',
+host: 'localhost',
+port: 3306,
+username: 'root',
+password: 'password',
+database: 'book_api',
+entities: [__dirname + '/../**/*.entity.{js,ts}'],
+synchronize: true,
+};
+```
+- Ke file `app.module.ts` tambahkan `TypeOrmModule`
+```ts
+@Module({ 
+  imports: [TypeOrmModule.forRoot(typeOrmConfig), BooksModule], 
+})
+```
+#### **02 Membuat Skema dan Repository**
+Dokumentasi lengkap mengenai `custom repository` dapat diakses [di sini](https://docs.nestjs.com/techniques/database#custom-repository).
+> **Tips:** simpan file/folder yang memiliki fitur bersangkutan di folder yang sama. Misalnya Book memiliki beberapa fitur, fitur tersebut harus di folder yang sama dengan Book.
+- Buat file `book.entity.ts`, isi dengan skema seperti kode di bawah
+```ts
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+
+@Entity()
+export class Book extends BaseEntity {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  title: string;
+
+  @Column()
+  author: string;
+
+  @Column()
+  category: string;
+
+  @Column()
+  year: number;
+}
+```
+- Buat file `repository/book.repository.ts`, untuk menyimpan **query yang berhubungan dengan database**
+```ts
+import { EntityRepository, Repository } from 'typeorm';
+import { Book } from '../entity/book.entity';
+
+@EntityRepository(Book)
+export class BookRepository extends Repository<Book> {}
+```
+> Untuk query yang berhubungan dengan database harus **asynchronous**
+#### **03 Implementasi**
+<mark>Get Book<mark>
+- Ke file `repository/book.repository.ts`, buat `query` **getBook**, seperti kode di bawah, lakukan secara **asynchronous**
+```ts
+async getBooks(filter: FilterBookDto): Promise<Book[]> {
+  const { title, author, category, min_year, max_year } = filter;
+  const query = this.createQueryBuilder('book');
+
+  if (title) {
+    query.andWhere('lower(book.title) LIKE :title', {
+      title: `%${title.toLowerCase()}%`,
+    });
+  }
+  if (author) {
+    query.andWhere('lower(book.author) LIKE :author', {
+      author: `%${author.toLowerCase()}%`,
+    });
+  }
+  if (category) {
+    query.andWhere('lower(book.category) LIKE :category', {
+      category: `%${category.toLowerCase()}%`,
+    });
+  }
+  if (min_year) {
+    query.andWhere('book.year >= :min_year', { min_year });
+  }
+  if (max_year) {
+    query.andWhere('book.year <= :max_year', { max_year });
+  }
+
+  return await query.getMany();
+}
+```
+- Ke file `books.module.ts`, lakukan `import` terhadap **bookRepository**
+```ts
+@Module({
+  imports: [TypeOrmModule.forFeature([BookRepository])],
+  controllers: [BooksController],
+  providers: [BooksService],
+})
+```
+- Ke file `bookService`, lalu buat terlebih dahulu `constructor` seperti kode di bawah
+```ts
+constructor(
+  @InjectRepository(BookRepository)
+  private readonly bookRepository: BookRepository,
+) {}
+```
+- Kemudian lakukan **Implementasi** pada method `getBooks`, lakukan secara **Asynchronous**
+```ts
+async getBooks(filter: FilterBookDto): Promise<Book[]> {
+  return await this.bookRepository.getBooks(filter);
+}
+```
+- Ke file `books.controller.ts`, lakukan **asynchronous** pada routing
+```ts
+@Get()
+async getBooks(@Query() filter: FilterBookDto): Promise<Book[]> {
+  return this.booksServices.getBooks(filter);
+}
+```
+<mark>Create Book</mark>
+- Ke file `books.controller.ts`, lakukan **asynchronous** pada routing
+```ts
+@Post()
+async createBook(@Body() payload: CreateBookDto): Promise<void> {
+  this.booksServices.createBook(payload);
+}
+```
+- ke file `books.service.ts`, lakukan **Implementasi** pada method `createBooks`, lakukan secara **Asynchronous**
+```ts
+async createBook(createBookDto: CreateBookDto): Promise<void> {
+  return await this.bookRepository.createBook(createBookDto);
+}
+```
+- Ke file `book.repository.ts` buat **query** database untuk function `createBook` 
+```ts
+async createBook(createBookDto: CreateBookDto): Promise<void> {
+  const { title, author, category, year } = createBookDto;
+
+  const book = this.create();
+  book.title = title;
+  book.author = author;
+  book.category = category;
+  book.year = year;
+
+  try {
+    await this.save(book);
+  } catch (error) {
+    throw new InternalServerErrorException(error);
+  }
+}
+```
+<mark>Get Book By Id</mark>  
+Dokumentasi Lengkap mengenai cara membuat `Custom Pipes` dapat diakses [di sini](https://docs.nestjs.com/pipes#custom-pipes).
+- Ke file `books.controller.ts`, lakukan **asynchronous** pada routing
+```ts
+@Get('/:id')
+  async getBookById(@Param('id') id: string): Promise<Book> {
+  return this.booksServices.getBookById(id);
+}
+```
+- ke file `books.service.ts`, lakukan **Implementasi** pada method `getBookById`, lakukan secara **Asynchronous**, menggunakan **function** bawaan repository yaitu `findOne`
+```ts
+async getBookById(id: string): Promise<Book> {
+  const book = await this.bookRepository.findOne(id);
+
+  if (!book) {
+    throw new NotFoundException(`Book with id ${id} not found`);
+  }
+  return book;
+}
+```
+- Buat **validasi** apakah **UUID**nya sudah sesuai atau belum, dengan membuat file `~/pipes/uuid-validation.pipe.ts`
+```ts
+import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
+import { isUUID } from 'class-validator';
+
+@Injectable()
+export class UUIDValidationPipe implements PipeTransform {
+  transform(value: any) {
+    if (!isUUID(value, 4)) {
+      throw new BadRequestException(`Value ${value} is not a valid UUID`);
+    }
+    return value;
+  }
+}
+```
+- Ke file `books.controller.ts` lakukan **implementasi pipe** pada **parameter id** function `getBookById`
+```ts
+@Get('/:id')
+async getBookById(
+  @Param('id', UUIDValidationPipe) id: string,
+): Promise<Book> {
+  return this.booksServices.getBookById(id);
+}
+```
+<mark>Update Book</mark>  
+- Ke file `books.controller.ts`, lakukan **asynchronous** pada routing, jangan lupa tambahkan **Pipe Validation UUID**
+```ts
+@Put('/:id')
+async updateBook(
+  @Param('id', UUIDValidationPipe) id: string,
+  @Body() payload: UpdateBookDto,
+): Promise<void> {
+  this.booksServices.updateBook(id, payload);
+}
+```
+- ke file `books.service.ts`, lakukan **Implementasi** pada method `updateBook`, lakukan secara **Asynchronous**
+```ts
+async updateBook(id: string, updateBookDto: UpdateBookDto): Promise<void> {
+  return await this.bookRepository.updateBook(id, updateBookDto);
+}
+```
+- Ke file `book.repository.ts` buat **query** database untuk function `updateBook` 
+```ts
+async updateBook(id: string, updateBookDto: UpdateBookDto): Promise<void> {
+  const { title, author, category, year } = updateBookDto;
+
+  const book = await this.findOne(id);
+  book.title = title;
+  book.author = author;
+  book.category = category;
+  book.year = year;
+
+  await this.save(book);
+}
+```
+<mark>Delete Book</mark>  
+- Ke file `books.controller.ts`, lakukan **asynchronous** pada routing, jangan lupa tambahkan **Pipe Validation UUID**
+```ts
+@Delete('/:id')
+async deleteBook(@Param('id', UUIDValidationPipe) id: string): Promise<void> {
+  this.booksServices.deleteBook(id);
+}
+```
+- ke file `books.service.ts`, lakukan **Implementasi** pada method `updateBook`, lakukan secara **Asynchronous**
+```ts
+async deleteBook(id: string): Promise<void> {
+  const result = await this.bookRepository.delete(id);
+  if (result.affected == 0) {
+    throw new NotFoundException(`Book with id ${id} not found`);
+  }
 }
 ```
