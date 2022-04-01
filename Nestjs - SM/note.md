@@ -611,7 +611,7 @@ async getBooks(@Query() filter: FilterBookDto): Promise<Book[]> {
 ```ts
 @Post()
 async createBook(@Body() payload: CreateBookDto): Promise<void> {
-  this.booksServices.createBook(payload);
+  return this.booksServices.createBook(payload);
 }
 ```
 - ke file `books.service.ts`, lakukan **Implementasi** pada method `createBooks`, lakukan secara **Asynchronous**
@@ -690,7 +690,7 @@ async updateBook(
   @Param('id', UUIDValidationPipe) id: string,
   @Body() payload: UpdateBookDto,
 ): Promise<void> {
-  this.booksServices.updateBook(id, payload);
+  return this.booksServices.updateBook(id, payload);
 }
 ```
 - ke file `books.service.ts`, lakukan **Implementasi** pada method `updateBook`, lakukan secara **Asynchronous**
@@ -718,15 +718,144 @@ async updateBook(id: string, updateBookDto: UpdateBookDto): Promise<void> {
 ```ts
 @Delete('/:id')
 async deleteBook(@Param('id', UUIDValidationPipe) id: string): Promise<void> {
-  this.booksServices.deleteBook(id);
+  return this.booksServices.deleteBook(id);
 }
 ```
-- ke file `books.service.ts`, lakukan **Implementasi** pada method `updateBook`, lakukan secara **Asynchronous**
+- ke file `books.service.ts`, lakukan **Implementasi** pada method `deleteBook`, lakukan secara **Asynchronous**
 ```ts
 async deleteBook(id: string): Promise<void> {
   const result = await this.bookRepository.delete(id);
   if (result.affected == 0) {
     throw new NotFoundException(`Book with id ${id} not found`);
+  }
+}
+```
+
+## 08 - Membuat Users
+### 8.1 Coding Time
+<mark>Konfigurasi</mark>
+- Buat terlbih dahulu `users.module.ts` dengan mengetikkan
+```bash
+$ nest g module Users
+```
+- Kemudian buat `users.service.ts` dengan mengetikkan
+```bash
+$ nest g service Users --no-spec-
+```
+- Kemudian buat `entity/user.entity.ts`, yang berisi **id, email, name, password, salt** berikan `unique` pada `email`
+```ts
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+
+@Entity()
+export class User extends BaseEntity {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  name: string;
+
+  @Column({ unique: true })
+  email: string;
+
+  @Column()
+  password: string;
+
+  @Column()
+  salt: string;
+}
+```
+- Kemudian buat **repository** terlebih dahulu, `repository/user.repository.ts`
+```ts
+import { EntityRepository, Repository } from 'typeorm';
+import { User } from '../entity/user.entity';
+
+@EntityRepository(User)
+export class UserRepository extends Repository<User> {}
+```
+<mark>Membuat User</mark>
+- Untuk membuat user buat terlebih dahulu `dto/create-user.dto.ts`, kemudian isi seperti kode di bawah
+```ts
+import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
+
+export class CreateUserDto {
+  @IsNotEmpty()
+  name: string;
+
+  @IsNotEmpty()
+  @IsEmail()
+  email: string;
+
+  @IsNotEmpty()
+  @MinLength(6)
+  password: string;
+}
+```
+- Buat function `createUser` secara **asynchronous** pada `user.repository.ts`
+```ts
+async createUser(createUserDto: CreateUserDto): Promise<void> {
+    const { name, email, password } = createUserDto;
+
+    const user = this.create();
+    user.name = name;
+    user.email = email;
+    user.salt = await bcrypt.genSalt();
+    user.password = await bcrypt.hash(password, user.salt);
+
+    try {
+      await user.save();
+    } catch (e) {
+      if (e.code == '23505') {
+        throw new ConflictException(`Email ${email} already used`);
+      } else {
+        throw new InternalServerErrorException(e);
+      }
+    }
+  }
+```
+- Jangan lupa untuk menambahkan library `bcrypt`
+```bash
+$ pnpm add bcrypt
+```
+- Kemudian ke file `users.module.ts` lakukan import terhadap `UserRepository`
+```ts
+imports: [TypeOrmModule.forFeature([UserRepository])],
+```
+- Ke file `users.service.ts` tambahkan function `createUser` secara **asynchronous**  
+```ts
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UserRepository } from './repository/user.repository';
+
+@Injectable()
+export class UsersService {
+  constructor(
+    @InjectRepository(UserRepository)
+    private readonly userRepository: UserRepository,
+  ) {}
+
+  async createUser(createUserDto: CreateUserDto): Promise<void> {
+    return await this.userRepository.createUser(createUserDto);
+  }
+}
+```
+- Buat file `users.controller.ts` dengan mengetikkan
+```ts
+$ nest g controller Users --no-spec-
+```
+- Ke file `users.controller.ts` buat route dan buat function `createUser` seperti kode di bawah
+```ts
+import { Body, Controller, Post } from '@nestjs/common';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UsersService } from './users.service';
+
+@Controller('users')
+export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
+
+  @Post()
+  async createUser(@Body() payload: CreateUserDto): Promise<void> {
+    return this.usersService.createUser(payload);
   }
 }
 ```
