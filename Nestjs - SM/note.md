@@ -859,3 +859,352 @@ export class UsersController {
   }
 }
 ```
+
+## 09 - Implementasi JWT (Json Web Tokens)
+> Web yang dapat diakses:
+> - https://tools.ietf.org/html/rfc7519  
+> - https://jwt.io
+- JWT merupakan standar untuk melakukan pertukaran data
+- JWT mengikuti standar **RFC 7519**
+- Data yang dipertukarkan menggunakan format JSON
+- JWT dapat di enkripsi menggunakan secret key seperti **HMAC** atau public/private key seperti **RSA**
+### 9.1 Kapan menggunakan JWT
+- Authorization
+- Information Exchange
+### 9.2 Struktur JWT
+- Header
+- Payload
+- Signature
+### 9.3 Header JWT
+- Berisi informasi algoritma enkripsi yang digunakan
+- Merupakan hasil Base64 informasi header dalam bentuk JSON
+### 9.4 Payload JWT
+- Berisi informasi yang digunakan untuk memverifikasi antar party
+- Seharusnya tidak berisi data sensitif
+- Hasil dari base64 dalam bentuk JSON
+### 9.5 Signature
+- Berisikan informasi yang dapat digunakan untuk memvalidasi JWT
+- Didapatkan dengan mengenkripsi **header** dan **payload** menggunakan algoritma yang sudah ditentukan oleh header
+- Menggunakan **secret key** atau **private key** dari penerima
+### 9.6 Access Token vs Refresh Token
+<mark>Access Token</mark>
+- Digunakan untuk mengakses resource 
+- Membawa informasi yang digunakan untuk authorization
+- Tidak disimpan di database
+- Didapatkan ketika melakukan login dan refresh token
+- Punya waktu hidup sedikit  
+
+<mark>Refresh Token</mark>
+- Digunakan untuk membuat access token baru
+- Membawa informasi untuk membuat access token baru
+- Disimpan di database (**bukan token**)
+- Didapatkan ketika melakukan login
+- Punya waktu hidup yang panjang
+
+### 9.7 Best Practice JWT
+- **Jangan** meletakan data **sensitif** di payload (contoh: password, role, saldo)
+- Expired time untuk access token sebaiknya sekecil mungkin (contoh: 30 detik, 1 menit, 1 jam)
+- Gunakan **refresh token** untuk membuat **access token** yang baru
+- **Jangan** simpan **access token** di database
+
+### 9.8 Coding Time
+<mark>Configuration</mark>
+- Buat file `auth.module.ts` dengan mengetikkan perintah berikut
+```bash
+$ nest g module Auth
+```
+- Kemudian buat file `auth.service.ts` dengan mengetikkan perintah berikut
+```bash
+$ nest g service Auth
+```
+- Install terlebih dahulu **library** untuk **authentication**
+```bash
+$ pnpm add @nestjs/passport @nestjs/jwt passport passport-jwt
+```
+- Buat file `config/jwt.config.ts`, kemudian isi dengan kode berikut
+```ts
+import { JwtModuleOptions } from '@nestjs/jwt';
+
+export const JwtConfig: JwtModuleOptions = {
+  secret: 'dreamtechteam',
+  signOptions: {
+    expiresIn: 60,
+  },
+};
+```
+- Ke file `auth.module.ts` lakukan **imports** terhadap `JwtModule` register `jwtConfig`
+```ts
+imports: [JwtModule.register(jwtConfig)],
+```
+- Ke file `auth.service.ts` lakukan **construct** terhadap `JwtService`
+```ts
+import { Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+
+@Injectable()
+export class AuthService {
+  constructor(private readonly jwtService: JwtService) {}
+}
+```
+<mark>Login Setup</mark>
+- Buat file `dto/login.dto.ts`, isi dengan kode di bawah
+```ts
+import { IsNotEmpty } from 'class-validator';
+
+export class LoginDto {
+  @IsNotEmpty()
+  email: string;
+
+  @IsNotEmpty()
+  password: string;
+}
+```
+- Buat terlebih dahulu `interface/login-response.interface.ts` untuk **access_token dan refresh_token**, isi seperti kode di bawah
+```ts
+export interface LoginResponse {
+  access_token: string;
+  refresh_token: string;
+}
+```
+- Ke file `auth.service.ts`, buat **function** login yang melakukan `Promise` dari `LoginResponse`
+```ts
+async login(loginDto: LoginDto): Promise<LoginResponse> {
+  const { email, password } = loginDto;
+}
+```
+<mark>Login Validate Email & Password</mark>
+- Kita perlu fitur yang ada di user untuk memvalidasi **email** dan **password**, ke file `users.service.ts` kemudian buat **function** `validateUser`
+```ts
+async validateUser(email: string, passowrd: string): Promise<User> {
+  return await this.userRepository.validateUser(email, passowrd);
+}
+```
+- Ke file `user.repository.ts`, buat **function** `validateUser`
+```ts
+async validateUser(email: string, password: string): Promise<User> {
+  const user = await this.findOne({ email });
+
+  if (user && (await user.validatePassword(password))) {
+    return user;
+  }
+  return null;
+}
+```
+- Ke file `user.entity.ts`, kemudian buat **function** `validatePassword` dan **import** `bcrypt`
+```ts
+import * as bcrypt from 'bcrypt';
+```
+```ts
+async validatePassword(password: string): Promise<boolean> {
+  const hash = await bcrypt.hash(password, this.salt);
+  return hash === this.password;
+}
+```
+- Ke file `users.module.ts` kita export `UsersService`
+```ts
+exports: [UsersService],
+```
+- Ke file `auth.module.ts` lakukan **imports** terhadap `UserModule`
+```ts
+imports: [JwtModule.register(jwtConfig), UsersModule],
+```
+<mark>Login Get Access Token Function</mark>
+- Ke file `auth.service.ts` tambahkan **contruct** `userService` 
+```ts
+constructor(
+  private readonly jwtService: JwtService,
+  private readonly userService: UsersService,
+) {}
+```
+- Ke **function** login, isi seperti kode di bawah
+```ts
+async login(loginDto: LoginDto): Promise<string> {
+  const { email, password } = loginDto;
+
+  const user = await this.userService.validateUser(email, password);
+  if (!user) {
+    throw new UnauthorizedException('Wrong email or password');
+  }
+
+  const access_token = await this.createAccessToken(user);
+  return access_token;
+}
+```
+- Kemudian buat **function** `createAccessToken`, lalu isika seperti kode di bawah
+```ts
+async createAccessToken(user: User): Promise<string> {
+  const payload = {
+    sub: user.id,
+  };
+  const access_token = await this.jwtService.signAsync(payload);
+  return access_token;
+}
+```
+- Buat file `auth.controller.ts` dengan mengetikkan perintah berikut
+```bash
+$ nest g controller Auth --no-spec
+```
+- Ke file `auth.controller.ts`, buat **Routes** `login`
+```ts
+import { LoginDto } from './dto/login.dto';
+import { AuthService } from './auth.service';
+import { Body, Controller, Post } from '@nestjs/common';
+
+@Controller('auth')
+export class AuthController {
+  constructor(private readonly authService: AuthService) {}
+
+  @Post('login')
+  async login(@Body() loginDto: LoginDto): Promise<string> {
+    return await this.authService.login(loginDto);
+  }
+}
+```
+<mark>Login Get Refresh Token Function</mark>
+- Buat file `entity/refresh-token.entity.ts` untuk menyimpan **refresh token** di database
+```ts
+import { Entity, BaseEntity, Column, PrimaryGeneratedColumn } from 'typeorm';
+
+@Entity()
+export class RefreshToken extends BaseEntity {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  isRevoked: boolean;
+
+  @Column()
+  expiredAt: Date;
+}
+```
+- Kemudian buat file `repository/refresh-token.repository.ts` untuk query **refresh token**
+```ts
+async createRefreshToken(user: User, ttl: number): Promise<RefreshToken> {
+  const refreshToken = this.create();
+  refreshToken.user = user;
+  refreshToken.isRevoked = false;
+  const expiredAt = new Date();
+  expiredAt.setTime(expiredAt.getTime() + ttl);
+  refreshToken.expiredAt = expiredAt;
+
+  return await refreshToken.save();
+}
+```
+- Buat **relasi** refresh token dengan user, dimana **satu user memiliki banyak refresh token**, ke file `refresh-token.entity.ts` dan `user.entity.ts` lalu tambahkan kode di bawah  
+  
+**refresh-token.entity.ts**
+```ts
+@ManyToOne(() => User, {user} => user.refreshTokens)
+user: User;
+```
+**user.entity.ts**
+```ts
+@OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user, { eager: true })
+refreshTokens: RefreshToken[];
+```
+- Ke file `auth.module.ts` lakukan **implementasi** repository
+```ts
+imports: [
+  JwtModule.register(jwtConfig),TypeOrmModule.forFeature[RefreshTokenRepository), UsersModule,
+],
+```
+- Ke file `jwt.config.ts` buat `expiresIn` agar tidak membuat berulang kali
+```ts
+export const refreshTokenConfig: JwtSignOptions = {
+  expiresIn: 3600 * 24,
+};
+```
+- Ke file `auth.service.ts` buat **function** baru `createRefreshToken` dan **injectRepository**
+```ts
+@InjectRepository(RefreshTokenRepository)
+  private readonly refreshTokenRepository: RefreshTokenRepository,
+```
+```ts
+async createRefreshToken(user: User): Promise<string> {
+  const refreshToken = await this.refreshTokenRepository.createRefreshToken(
+    user,
+    +refreshTokenConfig.expiresIn,
+  );
+  const payload = {
+    jid: refreshToken.id,
+  };
+  const refreshTokenValue = await this.jwtService.signAsync(
+    payload,
+    refreshTokenConfig,
+  );
+
+  return refreshTokenValue;
+}
+```
+<mark>Login Menggabungkan Access & Refresh Token</mark>
+- Ke file `auth.service.ts`, ubah **Promise** login dari `string` menjadi `LoginResponse` dan `return` **Access Token dan Refresh Token**
+```ts
+async login(loginDto: LoginDto): Promise<LoginResponse>
+```
+```ts
+const access_token = await this.createAccessToken(user);
+const refresh_token = await this.createRefreshToken(user);
+
+return { access_token, refresh_token } as LoginResponse;
+```
+- Ke `auth.controller.ts` ubah juga **Promise** dari `string` menjadi `LoginResponse`
+```ts
+async login(@Body() loginDto: LoginDto): Promise<LoginResponse>
+```
+<mark>Membuat Access Token dari Refresh Token</mark>
+- Buat terlebih dahulu `dto/refresh-access-token.dto.ts`, isi dengan kode di bawah
+```ts
+import { IsNotEmpty } from 'class-validator';
+
+export class RefreshAccessTokenDto {
+  @IsNotEmpty()
+  refresh_token: string;
+}
+```
+- Ke file `auth.service.ts`, buat **function** `refreshAccessToken` dan `decodeToken`
+```ts
+async refreshAccessToken(
+  refreshTokenDto: RefreshAccessTokenDto,
+): Promise<{ access_token: string }> {
+  const { refresh_token } = refreshTokenDto;
+  const payload = await this.decodeToken(refresh_token);
+  const refreshToken = await this.refreshTokenRepository.findOne(
+    payload.jid,
+    { relations: ['user'] },
+  );
+
+  if (!refreshToken) {
+    throw new UnauthorizedException('Refresh token is not found');
+  }
+
+  if (refreshToken.isRevoked) {
+    throw new UnauthorizedException('Refresh token is revoked');
+  }
+
+  const access_token = await this.createAccessToken(refreshToken.user);
+
+  return { access_token };
+}
+```
+```ts
+async decodeToken(token: string): Promise<any> {
+  try {
+    return await this.jwtService.verifyAsync(token);
+  } catch (error) {
+    if (error instanceof TokenExpiredError) {
+      throw new UnauthorizedException('Refresh token is expired');
+    } else {
+      throw new InternalServerErrorException('Error to decode token');
+    }
+  }
+}
+```
+- Ke file `auth.controller.ts` tambahkan Route **POST** ke `refresh-token`
+```ts
+@Post('refresh-token')
+async refreshToken(
+  @Body() refreshAccessTokenDto: RefreshAccessTokenDto,
+): Promise<{ access_token: string }> {
+  return this.authService.refreshAccessToken(refreshAccessTokenDto);
+}
+```
