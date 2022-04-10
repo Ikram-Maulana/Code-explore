@@ -1208,3 +1208,247 @@ async refreshToken(
   return this.authService.refreshAccessToken(refreshAccessTokenDto);
 }
 ```
+
+## 10 - NestJS Guard
+### 10.1 Apa itu Guard?
+- Guard bertugas untuk menentukan apakah suatu request akan di **handle** atau **tidak** oleh route handler
+- Biasanya digunakan untuk **authorization**
+- Pada **Express, authorization** biasanya dilakukan oleh **middleware**. Akan tetapi Middleware **"tidak tahu"** route mana yang menghandle request tersebut.
+- Guard dieksekusi **setelah** semua **middleware** dijalankan, tetapi sebelum **interceptor** dan **pipes**.
+### 10.2 Membuat Guard
+- Setiap guard wajib mengimplement fungsi **CanActive**.
+### 10.3 Coding Time
+<mark>Membuat JWT Strategy</mark>  
+Dokumentasi mengenai **jwt Strategy** dapat diakses [di sini](https://docs.nestjs.com/security/authentication#implementing-passport-jwt).
+- Buat file `auth/jwt.strategy.ts` lalu isi dengan kode di bawah
+```ts
+import { UsersService } from './../users/users.service';
+import { jwtConfig } from './../config/jwt.config';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+
+@Injectable()
+export class JwtStrategy extends PassportStrategy(Strategy) {
+  constructor(private readonly usersService: UsersService) {
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: true,
+      secretOrKey: jwtConfig.secret,
+    });
+  }
+
+  async validate(payload: any) {
+    const user = await this.usersService.findUserById(payload.sub);
+    if (!user) {
+      throw new UnauthorizedException('User is not found');
+    }
+
+    return user;
+  }
+}
+```
+- Ke file `users.service.ts` tambahkan function baru untuk **findUserById**
+```ts
+async findUserById(id: string): Promise<User> {
+  return await this.userRepository.findOne(id);
+}
+```
+- Tambahkan **JwtStrategy** dalam **providers** `auth.module.ts`
+```ts
+providers: [AuthService, JwtStrategy],
+```
+- Kita coba implementasikan **guard** dalam `books.controller.ts`
+```ts
+@UseGuards(AuthGuard('jwt'))
+```
+<mark>Membuat Custom Decorator untuk Mengambil Req User</mark>  
+Dokumentasi mengenai **custom decorator** dapat diakses [di sini](https://docs.nestjs.com/custom-decorators#param-decorators).
+- Buat file `auth/get-user.decorator.ts` lalu isi dengan kode di bawah
+```ts
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+
+export const GetUser = createParamDecorator(
+  (data: any, ctx: ExecutionContext) => {
+    const request = ctx.switchToHttp().getRequest();
+    return request.user;
+  },
+);
+```
+- Lalu kita coba **implementasikan** di `books.controller.ts`
+```ts
+@Get()
+async getBooks(
+  @Query() filter: FilterBookDto,
+  @GetUser() user: User,
+): Promise<Book[]> {
+  console.log(user);
+  return this.booksServices.getBooks(filter);
+}
+```
+<mark>Membuat Guard Global</mark>  
+Dokumentasi mengenai `Guard` dapat diakses [di sini](https://docs.nestjs.com/security/authentication#implementing-passport-jwt).
+- Buat terlebih dahulu file `~/guard/jwt.guards.ts` lalu isi dengan kode di bawah
+```ts
+import { AuthGuard } from '@nestjs/passport';
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class JwtGuard extends AuthGuard('jwt') {}
+```
+- Lalu implementasikan di `boooks.controller.ts`
+```ts
+@UseGuards(JwtGuard)
+```
+<mark>Implementasi Revoke</mark>
+- Ke file `auth.controller.ts` buat routes **PATCH** untuk revoke, jangan lupa gunakan **guard**
+```ts
+@Patch('/:id/revoke')
+@UseGuards(JwtGuard)
+async revokeRefreshToken(@Body() id: string): Promise<void> {
+  return await this.authService.revokeRefreshToken(id);
+}
+```
+- Ke file `auth.service.ts` buat function **revokeRefreshToken**  
+```ts
+async revokeRefreshToken(id: string): Promise<void> {
+  const refreshToken = await this.refreshTokenRepository.findOne(id);
+  if (!refreshToken) {
+    throw new UnauthorizedException('Refresh token is not found');
+  }
+
+  refreshToken.isRevoked = true;
+  await refreshToken.save();
+}
+```
+<mark>Membuat Relasi Antara Book dan User</mark>
+- Ke file `books.entity.ts`, tambahkan kondisi **ManyToOne**
+```ts
+@ManyToOne(() => User, (user) => user.books)
+  user: User;
+```
+- Ke file `user.entity.ts`, tambahkan kondisi **OneToMany**
+```ts
+@OneToMany(() => Book, (book) => book.user)
+  books: Book[];
+```
+<mark>Implementasi Relasi di GetBooks</mark>
+- Ke file `books.controller.ts` tambahkan User di parameter
+```ts
+@Get()
+async getBooks(
+  @Query() filter: FilterBookDto,
+  @GetUser() user: User,
+): Promise<Book[]> {
+  return this.booksServices.getBooks(user, filter);
+}
+```
+- Ke file `books.service.ts`, tambahkan User di parameter  
+```ts
+async getBooks(user: User, filter: FilterBookDto): Promise<Book[]> {
+  return await this.bookRepository.getBooks(user, filter);
+}
+```
+- Begitu juga di file `book.repository.ts`, tambahkan User di parameter dan query untuk **filter**
+```ts
+async getBooks(user: User, filter: FilterBookDto): Promise<Book[]> {
+```
+```ts
+const query = this.createQueryBuilder('book').where(
+  'book.userId = :userId',
+  { userId: user.id },
+);
+```
+<mark>Implementasi Relasi di createBook</mark>
+- Ke file `book.repository.ts`, ke function **createBook** tambahkan User di parameter dan book.user
+```ts
+async createBook(user: User, createBookDto: CreateBookDto): Promise<void> {
+```
+```ts
+book.user = user;
+```
+- Ke file `books.service.ts`, tambahkan User di parameter pada function **createBook**
+```ts
+async createBook(user: User, createBookDto: CreateBookDto): Promise<void> {
+  return await this.bookRepository.createBook(user, createBookDto);
+}
+```
+- Ke file `books.controller.ts`, tambahkan User di parameter pada function **createBook**
+```ts
+@Post()
+async createBook(
+  @GetUser() user: User,
+  @Body() payload: CreateBookDto,
+): Promise<void> {
+  return this.booksServices.createBook(user, payload);
+}
+```
+<mark>Implementasi Relasi di getBookById dan updateBook</mark>
+- Ke file `books.controller.ts`, tambahkan User di parameter pada function **getBookById dan updateBook**
+```ts
+@Get('/:id')
+async getBookById(
+  @GetUser() user: User,
+  @Param('id', UUIDValidationPipe) id: string,
+): Promise<Book> {
+  return this.booksServices.getBookById(user, id);
+}
+```
+```ts
+@Put('/:id')
+async updateBook(
+  @GetUser() user: User,
+  @Param('id', UUIDValidationPipe) id: string,
+  @Body() payload: UpdateBookDto,
+): Promise<void> {
+  return this.booksServices.updateBook(user, id, payload);
+}
+```
+- Ke file `books.service.ts`, tambahkan User di parameter pada function **getBookById dan updateBook**
+```ts
+async getBookById(user: User, id: string): Promise<Book> {
+  const book = await this.bookRepository.findOne(id, { where: { user } });
+
+  if (!book) {
+    throw new NotFoundException(`Book with id ${id} not found`);
+  }
+  return book;
+}
+```
+```ts
+async updateBook(
+  user: User,
+  id: string,
+  updateBookDto: UpdateBookDto,
+): Promise<void> {
+  const { title, author, category, year } = updateBookDto;
+
+  const book = await this.getBookById(user, id);
+  book.title = title;
+  book.author = author;
+  book.category = category;
+  book.year = year;
+
+  await book.save();
+}
+```
+<mark>Implementasi Relasi di deleteBook</mark>
+- Ke file `books.controller.ts`, tambahkan User di parameter pada function **deleteBook**
+```ts
+@Delete('/:id')
+async deleteBook(
+  @GetUser() user: User,
+  @Param('id', UUIDValidationPipe) id: string,
+): Promise<void> {
+  return this.booksServices.deleteBook(user, id);
+}
+```
+- Ke file `books.service.ts`, tambahkan User di parameter dan query pada function **deleteBook**
+```ts
+async deleteBook(user: User, id: string): Promise<void> {
+  const result = await this.bookRepository.delete({ user, id });
+  if (result.affected === 0) {
+    throw new NotFoundException(`Book with id ${id} not found`);
+  }
+}
+```
