@@ -1,4 +1,4 @@
-class notesHandler {
+class NotesHandler {
   constructor(service) {
     this._service = service;
   }
@@ -112,4 +112,4 @@ class notesHandler {
   }
 }
 
-module.exports = notesHandler;
+module.exports = NotesHandler;
