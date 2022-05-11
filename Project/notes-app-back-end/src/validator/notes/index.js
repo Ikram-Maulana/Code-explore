@@ -3,7 +3,7 @@ const {
   NotePayloadSchema,
 } = require('./schema');
 
-const NoteValidator = {
+const NotesValidator = {
   validateNotePayload: (payload) => {
     const validationResult = NotePayloadSchema.validate(payload);
 
@@ -13,4 +13,4 @@ const NoteValidator = {
   },
 };
 
-module.exports = NoteValidator;
+module.exports = NotesValidator;
