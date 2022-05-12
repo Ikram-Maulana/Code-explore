@@ -11,7 +11,7 @@ class UsersHandler {
 
   async postUserHandler(request, h) {
     try {
-      this._validator.validateUserPayload(request.payload);
+      this._validator.validatedUserPayload(request.payload);
       const {
         username,
         password,

@@ -5,7 +5,7 @@ const routes = (handler) => [{
 },
 {
   method: 'GET',
-  path: '/users/{userId}',
+  path: '/users/{id}',
   handler: handler.getUserByIdHandler,
 },
 ];
