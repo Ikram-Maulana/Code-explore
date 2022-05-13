@@ -59,6 +59,7 @@ class UsersHandler {
       const {
         id,
       } = request.params;
+
       const user = await this._service.getUserById(id);
 
       return {
@@ -77,7 +78,7 @@ class UsersHandler {
         return response;
       }
 
-      // Server ERROR!
+      // server ERROR!
       const response = h.response({
         status: 'error',
         message: 'Maaf, terjadi kegagalan pada server kami.',

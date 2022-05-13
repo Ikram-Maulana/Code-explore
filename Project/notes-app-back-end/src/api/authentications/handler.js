@@ -7,12 +7,12 @@ class AuthenticationsHandler {
     this._tokenManager = tokenManager;
     this._validator = validator;
 
-    this._postAuthenticationsHanler = this.postAuthenticationsHanler.bind(this);
-    this._putAuthenticationsHandler = this.putAuthenticationsHandler.bind(this);
-    this._deleteAuthenticationsHandler = this.deleteAuthenticationsHandler.bind(this);
+    this.postAuthenticationsHandler = this.postAuthenticationsHandler.bind(this);
+    this.putAuthenticationsHandler = this.putAuthenticationsHandler.bind(this);
+    this.deleteAuthenticationsHandler = this.deleteAuthenticationsHandler.bind(this);
   }
 
-  async postAuthenticationsHanler(request, h) {
+  async postAuthenticationsHandler(request, h) {
     try {
       this._validator.validatePostAuthenticationPayload(request.payload);
 
@@ -22,8 +22,12 @@ class AuthenticationsHandler {
       } = request.payload;
       const id = await this._usersService.verifyUserCredential(username, password);
 
-      const accessToken = this._tokenManager.generateAccessToken(id);
-      const refreshToken = this._tokenManager.generateRefreshToken(id);
+      const accessToken = this._tokenManager.generateAccessToken({
+        id,
+      });
+      const refreshToken = this._tokenManager.generateRefreshToken({
+        id,
+      });
 
       await this._authenticationsService.addRefreshToken(refreshToken);
 
@@ -68,7 +72,7 @@ class AuthenticationsHandler {
       await this._authenticationsService.verifyRefreshToken(refreshToken);
       const {
         id,
-      } = await this._tokenManager.verifyRefreshToken(refreshToken);
+      } = this._tokenManager.verifyRefreshToken(refreshToken);
 
       const accessToken = this._tokenManager.generateAccessToken({
         id,
@@ -103,7 +107,7 @@ class AuthenticationsHandler {
 
   async deleteAuthenticationsHandler(request, h) {
     try {
-      this._validator.validateDeleteAuthenticationsPayload(request.payload);
+      this._validator.validateDeleteAuthenticationPayload(request.payload);
 
       const {
         refreshToken,
@@ -113,7 +117,7 @@ class AuthenticationsHandler {
 
       return {
         status: 'success',
-        message: 'Refresh Token berhasil dihapus',
+        message: 'Refresh token berhasil dihapus',
       };
     } catch (error) {
       if (error instanceof ClientError) {
