@@ -27,7 +27,7 @@ class NotesService {
     const updatedAt = createdAt;
 
     const query = {
-      text: 'INSERT INTO notes VALUES($1, $2, $3, $4, $5, $6) RETURNING id',
+      text: 'INSERT INTO notes VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING id',
       values: [id, title, body, tags, createdAt, updatedAt, owner],
     };
 
@@ -104,13 +104,13 @@ class NotesService {
     const result = await this._pool.query(query);
 
     if (!result.rows.length) {
-      throw new NotFoundError('Resource yang Anda minta tidak ditemukan');
+      throw new NotFoundError('Catatan tidak ditemukan');
     }
 
     const note = result.rows[0];
 
     if (note.owner !== owner) {
-      throw new AuthorizationError('Anda tidak berhak mengakses resources ini');
+      throw new AuthorizationError('Anda tidak berhak mengakses resource ini');
     }
   }
 }
