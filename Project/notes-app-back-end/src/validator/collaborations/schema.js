@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-const CollaborationsPayloadSchema = Joi.isSchema({
+const CollaborationsPayloadSchema = Joi.object({
   noteId: Joi.string().required(),
   userId: Joi.string().required(),
 });
