@@ -48,22 +48,22 @@ class SongsService {
 
     if (title !== undefined && performer !== undefined) {
       query = {
-        text: 'SELECT * FROM songs WHERE title ILIKE $1 AND performer ILIKE $2',
+        text: 'SELECT id, title, performer FROM songs WHERE title ILIKE $1 AND performer ILIKE $2',
         values: [`%${title}%`, `%${performer}%`],
       };
     } else if (title !== undefined) {
       query = {
-        text: 'SELECT * FROM songs WHERE title ILIKE $1',
+        text: 'SELECT id, title, performer FROM songs WHERE title ILIKE $1',
         values: [`%${title}%`],
       };
     } else if (performer !== undefined) {
       query = {
-        text: 'SELECT * FROM songs WHERE performer ILIKE $1',
+        text: 'SELECT id, title, performer FROM songs WHERE performer ILIKE $1',
         values: [`%${performer}%`],
       };
     } else {
       query = {
-        text: 'SELECT * FROM songs',
+        text: 'SELECT id, title, performer FROM songs',
         values: [],
       };
     }
