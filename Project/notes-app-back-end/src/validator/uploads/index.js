@@ -4,7 +4,7 @@ const {
 } = require('./schema');
 
 const UploadsValidator = {
-  validateImagesHeaders: (headers) => {
+  validateImageHeaders: (headers) => {
     const validationResult = ImageHeadersSchema.validate(headers);
 
     if (validationResult.error) {

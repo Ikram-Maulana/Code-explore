@@ -5,15 +5,15 @@ class UploadsHandler {
     this._service = service;
     this._validator = validator;
 
-    this.postUploadImagesHandler = this.postUploadImagesHandler.bind(this);
+    this.postUploadImageHandler = this.postUploadImageHandler.bind(this);
   }
 
-  async postUploadImagesHandler(request, h) {
+  async postUploadImageHandler(request, h) {
     try {
       const {
         data,
       } = request.payload;
-      this._validator.validateImagesHeaders(data.hapi.headers);
+      this._validator.validateImageHeaders(data.hapi.headers);
 
       const filename = await this._service.writeFile(data, data.hapi);
 
@@ -34,6 +34,7 @@ class UploadsHandler {
         response.code(error.statusCode);
         return response;
       }
+
       // Server ERROR!
       const response = h.response({
         status: 'error',
