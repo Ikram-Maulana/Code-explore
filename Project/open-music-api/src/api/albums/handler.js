@@ -179,7 +179,6 @@ class AlbumsHandler {
       const {
         cover,
       } = request.payload;
-
       this._validator.validateImageHeaders(cover.hapi.headers);
 
       const filename = await this._storageService.writeFile(cover, cover.hapi);
@@ -187,12 +186,15 @@ class AlbumsHandler {
 
       await this._service.addCoverToAlbum(id, fileLocation);
 
-      return {
+      const response = h.response({
         status: 'success',
+        message: 'Sampul berhasil diunggah',
         data: {
           fileLocation,
         },
-      };
+      });
+      response.code(201);
+      return response;
     } catch (error) {
       if (error instanceof ClientError) {
         const response = h.response({
