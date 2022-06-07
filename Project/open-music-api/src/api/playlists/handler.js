@@ -112,12 +112,19 @@ class PlaylistsHandler {
       } = request.auth.credentials;
 
       const playlists = await this._service.getPlaylists(credentialId);
-      return {
+      const response = h.response({
         status: 'success',
         data: {
-          playlists,
+          playlists: playlists.playlist,
         },
-      };
+      });
+
+      if (playlists.dataSource === 'cache') {
+        response.header('X-Data-Source', 'cache');
+        return response;
+      }
+
+      return response;
     } catch (error) {
       if (error instanceof ClientError) {
         const response = h.response({
@@ -150,12 +157,19 @@ class PlaylistsHandler {
       await this._service.verifyPlaylistAccess(id, credentialId);
       const playlist = await this._service.getPlaylistById(id);
 
-      return {
+      const response = h.response({
         status: 'success',
         data: {
-          playlist,
+          playlist: playlist.playlistSong,
         },
-      };
+      });
+
+      if (playlist.dataSource === 'cache') {
+        response.header('X-Data-Source', 'cache');
+        return response;
+      }
+
+      return response;
     } catch (error) {
       if (error instanceof ClientError) {
         const response = h.response({

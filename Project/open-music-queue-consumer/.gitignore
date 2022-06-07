@@ -129,6 +129,3 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
-
-notes-api-web-server.pem
-src/api/albums/file
