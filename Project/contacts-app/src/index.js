@@ -1,7 +1,10 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
+import React from "react";
+import { createRoot } from "react-dom/client";
+import ContactApp from "./ContactApp";
 
-const element = <h1>Hello, World!</h1>;
-
-const root = createRoot(document.getElementById('root'));
-root.render(element);
+const root = createRoot(document.getElementById("root"));
+root.render(
+  <React.StrictMode>
+    <ContactApp />
+  </React.StrictMode>
+);
