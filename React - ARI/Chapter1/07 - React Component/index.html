@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Belajar React</title>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+    ></script>
+    <script type="text/babel">
+      const root = document.getElementById("root");
+
+      // Cara props
+      // const Halo = (props) => {
+      //   return (
+      //     <p>
+      //       Hello <b>{props.name}</b>
+      //     </p>
+      //   );
+      // };
+
+      // Cara destructuring props
+      const Halo = ({ name }) => {
+        return (
+          <p>
+            Hello, <b>{name}</b>
+          </p>
+        );
+      };
+
+      const element = (
+        <>
+          <Halo name="Ikram" />
+          <Halo name="Maulana" />
+          <Halo name="Sandhika" />
+        </>
+      );
+
+      ReactDOM.render(element, root);
+    </script>
+  </body>
+</html>
