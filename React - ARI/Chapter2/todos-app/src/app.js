@@ -16,7 +16,7 @@ const App = () => {
     if (edit.id) {
       // Menampung data yang akan diupdate
       const updatedTodo = {
-        id: edit.id,
+        ...edit,
         activity,
       };
 
@@ -29,6 +29,7 @@ const App = () => {
 
       // Menyimpan todo yang baru
       setTodos(updatedTodos);
+      message && setMessage("");
       return onCancelEditHandler();
     }
 
@@ -37,9 +38,10 @@ const App = () => {
       {
         id: generateId(),
         activity,
+        done: false,
       },
     ]);
-    setMessage("");
+    message && setMessage("");
     setActivity("");
   };
 
@@ -59,6 +61,26 @@ const App = () => {
     console.log("cancel edit");
     setEdit([]);
     setActivity("");
+  };
+
+  const onDoneActivityHandler = (todo) => {
+    // Menampung data yang akan diupdate
+    const updatedTodo = {
+      ...todo,
+      done: !todo.done,
+    };
+
+    // Mencari index todo yang akan diupdate
+    const todoEditIndex = todos.findIndex(
+      (currentTodo) => currentTodo.id === todo.id
+    );
+    const updatedTodos = [...todos];
+
+    // Mengganti todo yang akan diupdate
+    updatedTodos[todoEditIndex] = updatedTodo;
+
+    // Menyimpan todo yang baru
+    setTodos(updatedTodos);
   };
 
   return (
@@ -92,7 +114,14 @@ const App = () => {
           {todos.map((todo) => {
             return (
               <li key={todo.id}>
-                {todo.activity}{" "}
+                <input
+                  type="checkbox"
+                  checked={todo.done}
+                  onChange={() => onDoneActivityHandler(todo)}
+                  disabled={edit.id ? true : false}
+                ></input>
+                {todo.activity}
+                {todo.done ? " (Selesai) " : " (Belum Selesai) "}
                 <button onClick={() => onEditActivityHandler(todo)}>
                   Edit
                 </button>

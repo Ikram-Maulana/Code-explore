@@ -14,8 +14,7 @@ const App = () => {
 
     if (edit.id) {
       // Menampung data yang akan diupdate
-      const updatedTodo = {
-        id: edit.id,
+      const updatedTodo = { ...edit,
         activity
       }; // Mencari index todo yang akan diupdate
 
@@ -25,14 +24,16 @@ const App = () => {
       updatedTodos[todoEditIndex] = updatedTodo; // Menyimpan todo yang baru
 
       setTodos(updatedTodos);
+      message && setMessage("");
       return onCancelEditHandler();
     }
 
     setTodos([...todos, {
       id: generateId(),
-      activity
+      activity,
+      done: false
     }]);
-    setMessage("");
+    message && setMessage("");
     setActivity("");
   };
 
@@ -51,6 +52,20 @@ const App = () => {
     console.log("cancel edit");
     setEdit([]);
     setActivity("");
+  };
+
+  const onDoneActivityHandler = todo => {
+    // Menampung data yang akan diupdate
+    const updatedTodo = { ...todo,
+      done: !todo.done
+    }; // Mencari index todo yang akan diupdate
+
+    const todoEditIndex = todos.findIndex(currentTodo => currentTodo.id === todo.id);
+    const updatedTodos = [...todos]; // Mengganti todo yang akan diupdate
+
+    updatedTodos[todoEditIndex] = updatedTodo; // Menyimpan todo yang baru
+
+    setTodos(updatedTodos);
   };
 
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h1", null, "Simple Todo List"), message && /*#__PURE__*/React.createElement("div", {
@@ -73,7 +88,12 @@ const App = () => {
   }, "Cancel Edit")), todos.length > 0 ? /*#__PURE__*/React.createElement("ul", null, todos.map(todo => {
     return /*#__PURE__*/React.createElement("li", {
       key: todo.id
-    }, todo.activity, " ", /*#__PURE__*/React.createElement("button", {
+    }, /*#__PURE__*/React.createElement("input", {
+      type: "checkbox",
+      checked: todo.done,
+      onChange: () => onDoneActivityHandler(todo),
+      disabled: edit.id ? true : false
+    }), todo.activity, todo.done ? " (Selesai) " : " (Belum Selesai) ", /*#__PURE__*/React.createElement("button", {
       onClick: () => onEditActivityHandler(todo)
     }, "Edit"), /*#__PURE__*/React.createElement("button", {
       onClick: () => onDeleteActivityHandler(todo.id)
