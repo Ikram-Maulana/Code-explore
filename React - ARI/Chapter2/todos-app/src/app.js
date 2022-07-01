@@ -25,7 +25,8 @@ const App = () => {
       updatedTodos[todoEditIndex] = updatedTodo;
 
       // Menyimpan todo yang baru
-      return setTodos(updatedTodos);
+      setTodos(updatedTodos);
+      return onCancelEditHandler();
     }
 
     setTodos([
@@ -42,11 +43,18 @@ const App = () => {
     const filteredTodos = todos.filter((todo) => todo.id !== id);
 
     setTodos(filteredTodos);
+    edit.id && onCancelEditHandler();
   };
 
   const onEditActivityHandler = (todo) => {
     setActivity(todo.activity);
     setEdit(todo);
+  };
+
+  const onCancelEditHandler = () => {
+    console.log("cancel edit");
+    setEdit([]);
+    setActivity("");
   };
 
   return (
@@ -63,6 +71,7 @@ const App = () => {
           }}
         />
         <button>{edit.id ? "Simpan Perubahan" : "Tambah"}</button>
+        {edit.id && <button onClick={onCancelEditHandler}>Cancel Edit</button>}
       </form>
       <ul>
         {todos.map((todo) => {
