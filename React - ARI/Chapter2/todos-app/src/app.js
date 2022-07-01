@@ -19,6 +19,12 @@ const App = () => {
     setActivity("");
   };
 
+  const onDeleteActivityHandler = (id) => {
+    const filteredTodos = todos.filter((todo) => todo.id !== id);
+
+    setTodos(filteredTodos);
+  };
+
   return (
     <>
       <h1>Simple Todo List</h1>
@@ -36,7 +42,14 @@ const App = () => {
       </form>
       <ul>
         {todos.map((todo) => {
-          return <li key={todo.id}>{todo.activity}</li>;
+          return (
+            <li key={todo.id}>
+              {todo.activity}{" "}
+              <button onClick={() => onDeleteActivityHandler(todo.id)}>
+                Hapus
+              </button>
+            </li>
+          );
         })}
       </ul>
     </>

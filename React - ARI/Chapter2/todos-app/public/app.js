@@ -15,6 +15,11 @@ const App = () => {
     setActivity("");
   };
 
+  const onDeleteActivityHandler = id => {
+    const filteredTodos = todos.filter(todo => todo.id !== id);
+    setTodos(filteredTodos);
+  };
+
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h1", null, "Simple Todo List"), /*#__PURE__*/React.createElement("form", {
     onSubmit: onSubmitFormHandler
   }, /*#__PURE__*/React.createElement("input", {
@@ -28,7 +33,9 @@ const App = () => {
   }), /*#__PURE__*/React.createElement("button", null, "Tambah")), /*#__PURE__*/React.createElement("ul", null, todos.map(todo => {
     return /*#__PURE__*/React.createElement("li", {
       key: todo.id
-    }, todo.activity);
+    }, todo.activity, " ", /*#__PURE__*/React.createElement("button", {
+      onClick: () => onDeleteActivityHandler(todo.id)
+    }, "Hapus"));
   })));
 };
 
