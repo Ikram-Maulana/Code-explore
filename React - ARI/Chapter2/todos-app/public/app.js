@@ -2,6 +2,7 @@ const App = () => {
   const [activity, setActivity] = React.useState("");
   const [edit, setEdit] = React.useState({});
   const [todos, setTodos] = React.useState([]);
+  const [message, setMessage] = React.useState("");
 
   const generateId = () => {
     return Date.now();
@@ -9,6 +10,7 @@ const App = () => {
 
   const onSubmitFormHandler = e => {
     e.preventDefault();
+    if (!activity) return setMessage("Kolom aktivitas jangan kosong!");
 
     if (edit.id) {
       // Menampung data yang akan diupdate
@@ -30,6 +32,7 @@ const App = () => {
       id: generateId(),
       activity
     }]);
+    setMessage("");
     setActivity("");
   };
 
@@ -50,7 +53,12 @@ const App = () => {
     setActivity("");
   };
 
-  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h1", null, "Simple Todo List"), /*#__PURE__*/React.createElement("form", {
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h1", null, "Simple Todo List"), message && /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: "red",
+      marginBottom: "1rem"
+    }
+  }, message), /*#__PURE__*/React.createElement("form", {
     onSubmit: onSubmitFormHandler
   }, /*#__PURE__*/React.createElement("input", {
     type: "text",
@@ -62,7 +70,7 @@ const App = () => {
     }
   }), /*#__PURE__*/React.createElement("button", null, edit.id ? "Simpan Perubahan" : "Tambah"), edit.id && /*#__PURE__*/React.createElement("button", {
     onClick: onCancelEditHandler
-  }, "Cancel Edit")), /*#__PURE__*/React.createElement("ul", null, todos.map(todo => {
+  }, "Cancel Edit")), todos.length > 0 ? /*#__PURE__*/React.createElement("ul", null, todos.map(todo => {
     return /*#__PURE__*/React.createElement("li", {
       key: todo.id
     }, todo.activity, " ", /*#__PURE__*/React.createElement("button", {
@@ -70,7 +78,7 @@ const App = () => {
     }, "Edit"), /*#__PURE__*/React.createElement("button", {
       onClick: () => onDeleteActivityHandler(todo.id)
     }, "Hapus"));
-  })));
+  })) : /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("i", null, "Tidak ada data aktivitas")));
 };
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

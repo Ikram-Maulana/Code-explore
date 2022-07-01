@@ -2,6 +2,7 @@ const App = () => {
   const [activity, setActivity] = React.useState("");
   const [edit, setEdit] = React.useState({});
   const [todos, setTodos] = React.useState([]);
+  const [message, setMessage] = React.useState("");
 
   const generateId = () => {
     return Date.now();
@@ -9,6 +10,8 @@ const App = () => {
 
   const onSubmitFormHandler = (e) => {
     e.preventDefault();
+
+    if (!activity) return setMessage("Kolom aktivitas jangan kosong!");
 
     if (edit.id) {
       // Menampung data yang akan diupdate
@@ -36,6 +39,7 @@ const App = () => {
         activity,
       },
     ]);
+    setMessage("");
     setActivity("");
   };
 
@@ -60,6 +64,16 @@ const App = () => {
   return (
     <>
       <h1>Simple Todo List</h1>
+      {message && (
+        <div
+          style={{
+            color: "red",
+            marginBottom: "1rem",
+          }}
+        >
+          {message}
+        </div>
+      )}
       <form onSubmit={onSubmitFormHandler}>
         <input
           type="text"
@@ -73,19 +87,27 @@ const App = () => {
         <button>{edit.id ? "Simpan Perubahan" : "Tambah"}</button>
         {edit.id && <button onClick={onCancelEditHandler}>Cancel Edit</button>}
       </form>
-      <ul>
-        {todos.map((todo) => {
-          return (
-            <li key={todo.id}>
-              {todo.activity}{" "}
-              <button onClick={() => onEditActivityHandler(todo)}>Edit</button>
-              <button onClick={() => onDeleteActivityHandler(todo.id)}>
-                Hapus
-              </button>
-            </li>
-          );
-        })}
-      </ul>
+      {todos.length > 0 ? (
+        <ul>
+          {todos.map((todo) => {
+            return (
+              <li key={todo.id}>
+                {todo.activity}{" "}
+                <button onClick={() => onEditActivityHandler(todo)}>
+                  Edit
+                </button>
+                <button onClick={() => onDeleteActivityHandler(todo.id)}>
+                  Hapus
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        <p>
+          <i>Tidak ada data aktivitas</i>
+        </p>
+      )}
     </>
   );
 };
