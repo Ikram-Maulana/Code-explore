@@ -2,9 +2,16 @@ const App = () => {
   const [activity, setActivity] = React.useState("");
   const [todos, setTodos] = React.useState([]);
 
+  const generateId = () => {
+    return Date.now();
+  };
+
   const onSubmitFormHandler = e => {
     e.preventDefault();
-    setTodos([...todos, activity]);
+    setTodos([...todos, {
+      id: generateId(),
+      activity: activity
+    }]);
     setActivity("");
   };
 
@@ -20,8 +27,8 @@ const App = () => {
     }
   }), /*#__PURE__*/React.createElement("button", null, "Tambah")), /*#__PURE__*/React.createElement("ul", null, todos.map(todo => {
     return /*#__PURE__*/React.createElement("li", {
-      key: todo
-    }, todo);
+      key: todo.id
+    }, todo.activity);
   })));
 };
 
