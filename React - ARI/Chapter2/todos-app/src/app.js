@@ -1,5 +1,6 @@
 const App = () => {
   const [activity, setActivity] = React.useState("");
+  const [edit, setEdit] = React.useState({});
   const [todos, setTodos] = React.useState([]);
 
   const generateId = () => {
@@ -9,11 +10,29 @@ const App = () => {
   const onSubmitFormHandler = (e) => {
     e.preventDefault();
 
+    if (edit.id) {
+      // Menampung data yang akan diupdate
+      const updatedTodo = {
+        id: edit.id,
+        activity,
+      };
+
+      // Mencari index todo yang akan diupdate
+      const todoEditIndex = todos.findIndex((todo) => todo.id === edit.id);
+      const updatedTodos = [...todos];
+
+      // Mengganti todo yang akan diupdate
+      updatedTodos[todoEditIndex] = updatedTodo;
+
+      // Menyimpan todo yang baru
+      return setTodos(updatedTodos);
+    }
+
     setTodos([
       ...todos,
       {
         id: generateId(),
-        activity: activity,
+        activity,
       },
     ]);
     setActivity("");
@@ -23,6 +42,11 @@ const App = () => {
     const filteredTodos = todos.filter((todo) => todo.id !== id);
 
     setTodos(filteredTodos);
+  };
+
+  const onEditActivityHandler = (todo) => {
+    setActivity(todo.activity);
+    setEdit(todo);
   };
 
   return (
@@ -38,13 +62,14 @@ const App = () => {
             setActivity(e.target.value);
           }}
         />
-        <button>Tambah</button>
+        <button>{edit.id ? "Simpan Perubahan" : "Tambah"}</button>
       </form>
       <ul>
         {todos.map((todo) => {
           return (
             <li key={todo.id}>
               {todo.activity}{" "}
+              <button onClick={() => onEditActivityHandler(todo)}>Edit</button>
               <button onClick={() => onDeleteActivityHandler(todo.id)}>
                 Hapus
               </button>
