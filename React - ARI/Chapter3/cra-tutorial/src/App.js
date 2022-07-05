@@ -1,5 +1,5 @@
 import React from "react";
-import Welcome from "./Welcome";
+import Welcome, { Welcomeh2, Welcomeh3 } from "./Welcome";
 
 // Styling
 import "./App.css";
@@ -8,6 +8,8 @@ function App() {
   return (
     <div className="App">
       <Welcome />
+      <Welcomeh2 />
+      <Welcomeh3 />
     </div>
   );
 }
