@@ -1,0 +1,7 @@
+.btn-app {
+  @apply bg-blue-600 text-white px-5 py-3 rounded-md;
+}
+
+.btn-app:hover {
+  @apply bg-blue-800;
+}
