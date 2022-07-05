@@ -1,5 +1,5 @@
 import React from "react";
-import Welcome, { Welcomeh2, Welcomeh3 } from "./Welcome";
+import Welcome from "./Welcome";
 
 // Styling
 import "./App.css";
@@ -7,9 +7,8 @@ import "./App.css";
 function App() {
   return (
     <div className="App">
-      <Welcome />
-      <Welcomeh2 />
-      <Welcomeh3 />
+      <Welcome nama="Ikram" />
+      <Welcome nama="Maulana">Selamat Datang Brodi</Welcome>
     </div>
   );
 }
