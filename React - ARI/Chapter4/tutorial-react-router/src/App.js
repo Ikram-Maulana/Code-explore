@@ -5,6 +5,7 @@ import AboutTeam from "./AboutTeam";
 import Blog from "./Blog";
 import BlogDetail from "./BlogDetail";
 import Home from "./Home";
+import NotFound from "./NotFound";
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
         </Route>
         <Route path="blog" element={<Blog />} />
         <Route path="blog/:slug" element={<BlogDetail />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );
