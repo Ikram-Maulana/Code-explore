@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Belajar React</title>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+    ></script>
+    <script type="text/babel">
+      const root = document.getElementById("root");
+
+      // Ketika menggunakan vanilla javascript maka semua element akan berubah setiap detiknya
+      // const time = () => {
+      //   const element = `
+      //       <h1>Jam Sekarang</h1>
+      //       <p>${new Date().toLocaleTimeString()}</p>
+      //   `;
+
+      //   root.innerHTML = element;
+      // };
+
+      // Ketika menggunakan react maka element yang akan berubah hanya yang seharusnya berubah saja
+      // Pada contoh kasus kali ini p saja yang akan berubah setiap detiknya
+      const time = () => {
+        const element = (
+          <>
+            <h1>Jam Sekarang</h1>
+            <p>{new Date().toLocaleTimeString()}</p>
+          </>
+        );
+
+        ReactDOM.render(element, root);
+      };
+
+      setInterval(time, 1000);
+    </script>
+  </body>
+</html>
