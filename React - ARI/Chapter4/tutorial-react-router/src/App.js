@@ -2,14 +2,17 @@ import React from "react";
 import { Link, Route, Routes } from "react-router-dom";
 import About from "./About";
 import AboutTeam from "./AboutTeam";
+import Blog from "./Blog";
+import BlogDetail from "./BlogDetail";
 import Home from "./Home";
 
-function App() {
+const App = () => {
   return (
     <div className="App">
       <nav>
         <Link to="/">Home</Link>
         <Link to="/about">About</Link>
+        <Link to="/blog">Blog</Link>
       </nav>
 
       <Routes>
@@ -17,9 +20,11 @@ function App() {
         <Route path="about" element={<About />}>
           <Route path="team" element={<AboutTeam />} />
         </Route>
+        <Route path="blog" element={<Blog />} />
+        <Route path="blog/:slug" element={<BlogDetail />} />
       </Routes>
     </div>
   );
-}
+};
 
 export default App;

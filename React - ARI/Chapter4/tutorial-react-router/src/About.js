@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, Outlet } from "react-router-dom";
 
-export default function About() {
+const About = () => {
   return (
     <>
       <h1>Halaman About</h1>
@@ -17,4 +17,6 @@ export default function About() {
       <Outlet />
     </>
   );
-}
+};
+
+export default About;
