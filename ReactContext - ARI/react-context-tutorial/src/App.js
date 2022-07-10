@@ -15,6 +15,7 @@ const App = () => {
     setUser(user);
   }, []);
 
+  // Context Service
   const appContextValue = {
     user,
   };
