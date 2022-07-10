@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
+import AppContext from "../context/app-context";
 
-const NavbarUserText = ({ user }) => {
+const NavbarUserText = () => {
+  const { user } = useContext(AppContext);
   return <span>Hi, {user.name}!</span>;
 };
 

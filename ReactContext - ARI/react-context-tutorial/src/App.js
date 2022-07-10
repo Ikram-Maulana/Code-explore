@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import Navbar from "./components/Navbar";
+import AppContext from "./context/app-context";
 
 const App = () => {
   const [user, setUser] = useState({});
@@ -14,9 +15,15 @@ const App = () => {
     setUser(user);
   }, []);
 
+  const appContextValue = {
+    user,
+  };
+
   return (
     <div className="App">
-      <Navbar user={user} />
+      <AppContext.Provider value={appContextValue}>
+        <Navbar />
+      </AppContext.Provider>
     </div>
   );
 };

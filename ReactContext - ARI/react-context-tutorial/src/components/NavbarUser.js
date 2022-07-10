@@ -2,11 +2,11 @@ import React from "react";
 import NavbarUserAvatar from "./NavbarUserAvatar";
 import NavbarUserText from "./NavbarUserText";
 
-const NavbarUser = (props) => {
+const NavbarUser = () => {
   return (
     <div>
-      <NavbarUserAvatar user={props.user} />
-      <NavbarUserText user={props.user} />
+      <NavbarUserAvatar />
+      <NavbarUserText />
     </div>
   );
 };

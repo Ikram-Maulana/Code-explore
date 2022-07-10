@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
+import AppContext from "../context/app-context";
 
-const NavbarUserAvatar = ({ user }) => {
+const NavbarUserAvatar = () => {
+  const { user } = useContext(AppContext);
   return <img src={user.avatar} alt="avatar" width="50" />;
 };
 
