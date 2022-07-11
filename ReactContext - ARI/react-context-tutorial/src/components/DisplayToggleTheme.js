@@ -2,10 +2,10 @@ import React from "react";
 import { useAppContext } from "../context/app-context";
 
 const DisplayToggleTheme = () => {
-  const { theme, setTheme } = useAppContext();
+  const [, dispatch] = useAppContext();
 
   return (
-    <button onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
+    <button onClick={() => dispatch({ type: "toggleTheme" })}>
       Toggle Theme
     </button>
   );
