@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
-import AppContext from "../context/app-context";
+import React from "react";
+import { useAppContext } from "../context/app-context";
 
 // Context Client
 const Setting = () => {
-  const { user, setUser } = useContext(AppContext);
+  const { user, setUser } = useAppContext();
   return (
     <input
       type="text"

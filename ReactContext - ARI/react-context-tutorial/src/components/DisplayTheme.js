@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
-import AppContext from "../context/app-context";
+import React from "react";
+import { useAppContext } from "../context/app-context";
 
 const DisplayTheme = () => {
-  const { theme } = useContext(AppContext);
+  const { theme } = useAppContext();
 
   return <div>{theme}</div>;
 };

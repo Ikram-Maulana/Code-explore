@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
-import AppContext from "../context/app-context";
+import React from "react";
+import { useAppContext } from "../context/app-context";
 
 const DisplayToggleTheme = () => {
-  const { theme, setTheme } = useContext(AppContext);
+  const { theme, setTheme } = useAppContext();
 
   return (
     <button onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
