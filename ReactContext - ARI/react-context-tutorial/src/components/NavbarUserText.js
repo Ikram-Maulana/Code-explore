@@ -3,7 +3,7 @@ import { useAppContext } from "../context/app-context";
 
 // Context Client
 const NavbarUserText = () => {
-  const { user } = useAppContext();
+  const [{ user }] = useAppContext();
   return <span>Hi, {user?.name}!</span>;
 };
 
