@@ -3,16 +3,24 @@ import React, { useReducer } from "react";
 const reducer = (state, action) => {
   switch (action.type) {
     case "increment":
-      return state + action.payload;
+      return { ...state, count: state.count + action.payload };
     case "decrement":
-      return state === 0 ? 0 : state - action.payload;
+      return {
+        ...state,
+        count: state.count === 0 ? 0 : state.count - action.payload,
+      };
     default:
       throw new Error("Unexpected action");
   }
 };
 
+const initialValue = {
+  count: 0,
+  theme: "light",
+};
+
 const Reducer = () => {
-  const [count, setCount] = useReducer(reducer, 0);
+  const [state, dispatch] = useReducer(reducer, initialValue);
 
   return (
     <>
@@ -23,11 +31,11 @@ const Reducer = () => {
           gap: "1rem",
         }}
       >
-        <button onClick={() => setCount({ type: "decrement", payload: 2 })}>
+        <button onClick={() => dispatch({ type: "decrement", payload: 2 })}>
           - 2
         </button>
-        <span>{count}</span>
-        <button onClick={() => setCount({ type: "increment", payload: 2 })}>
+        <span>{state.count}</span>
+        <button onClick={() => dispatch({ type: "increment", payload: 2 })}>
           + 2
         </button>
       </div>
