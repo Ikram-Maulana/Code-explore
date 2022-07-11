@@ -5,17 +5,20 @@ import DisplayToggleTheme from "./components/DisplayToggleTheme";
 import Navbar from "./components/Navbar";
 import Setting from "./components/Setting";
 import { AppProvider } from "./context/app-context";
+import { ThemeProvider } from "./context/theme-context";
 
 const App = () => {
   return (
     <div className="App">
       <AppProvider>
-        <Navbar />
-        <hr />
-        <Setting />
-        <hr />
-        <DisplayTheme />
-        <DisplayToggleTheme />
+        <ThemeProvider>
+          <Navbar />
+          <hr />
+          <Setting />
+          <hr />
+          <DisplayTheme />
+          <DisplayToggleTheme />
+        </ThemeProvider>
       </AppProvider>
     </div>
   );

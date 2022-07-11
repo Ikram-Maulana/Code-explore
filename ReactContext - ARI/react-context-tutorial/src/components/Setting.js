@@ -9,12 +9,7 @@ const Setting = () => {
       type="text"
       name="changeName"
       placeholder="Change Name..."
-      onChange={(e) =>
-        dispatch({
-          type: "updateUser",
-          payload: { ...user, name: e.target.value },
-        })
-      }
+      onChange={(e) => dispatch({type: "updateUser", payload: { ...user, name: e.target.value }})}
       value={user.name ?? ""}
     />
   );

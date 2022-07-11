@@ -1,8 +1,6 @@
 import React, { createContext, useContext, useEffect, useReducer } from "react";
 
-const AppContext = createContext({
-  empty: true,
-});
+const AppContext = createContext({});
 
 const useAppContext = () => {
   return useContext(AppContext);
@@ -10,15 +8,12 @@ const useAppContext = () => {
 
 const initialState = {
   user: {},
-  theme: "light",
 };
 
 const reducer = (state, action) => {
   switch (action.type) {
     case "updateUser":
       return { ...state, user: action.payload };
-    case "toggleTheme":
-      return { ...state, theme: state.theme === "light" ? "dark" : "light" };
     default:
       throw new Error("Unexpected action");
   }
