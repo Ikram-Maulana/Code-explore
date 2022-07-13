@@ -41,6 +41,24 @@ export const deleteUser = createAsyncThunk("users/deleteUser", async (id) => {
   }
 });
 
+export const updateUser = createAsyncThunk(
+  "users/updateUser",
+  async (value) => {
+    try {
+      const response = await axios.put(
+        `https://623b066b2e056d1037ebba0e.mockapi.io/users/${value.id}`,
+        {
+          name: value.name,
+          email: value.email,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
 const usersEntity = createEntityAdapter({
   selectId: (user) => user.id,
 });
@@ -57,6 +75,12 @@ const userSlice = createSlice({
     },
     [deleteUser.fulfilled]: (state, action) => {
       usersEntity.removeOne(state, action.payload);
+    },
+    [updateUser.fulfilled]: (state, action) => {
+      usersEntity.updateOne(state, {
+        id: action.payload.id,
+        updates: action.payload,
+      });
     },
   },
 });

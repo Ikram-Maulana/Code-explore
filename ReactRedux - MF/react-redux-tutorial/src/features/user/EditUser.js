@@ -1,7 +1,10 @@
 import { Label, TextInput } from "flowbite-react";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import FormButton from "./FormButton";
+import { getUsers, updateUser, usersSelector } from "./userSlice";
 
 const EditUser = () => {
   const {
@@ -9,7 +12,20 @@ const EditUser = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => console.log(data);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { id } = useParams();
+
+  const user = useSelector((state) => usersSelector.selectById(state, id));
+
+  useEffect(() => {
+    dispatch(getUsers());
+  }, [dispatch]);
+
+  const onSubmit = async (data) => {
+    await dispatch(updateUser({ ...data, id }));
+    navigate("/");
+  };
 
   return (
     <div className="mt-10 max-w-xl mx-auto" onSubmit={handleSubmit(onSubmit)}>
@@ -23,6 +39,7 @@ const EditUser = () => {
             type="text"
             placeholder="Type your name..."
             {...register("name", { required: true })}
+            defaultValue={user.name}
           />
           {errors.name && (
             <span className="font-medium text-sm text-red-700">
@@ -39,6 +56,7 @@ const EditUser = () => {
             type="email"
             placeholder="Type your email..."
             {...register("email", { required: true })}
+            defaultValue={user.email}
           />
           {errors.email && (
             <span className="font-medium text-sm text-red-700">
