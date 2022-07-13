@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import FormButton from "./FormButton";
-import { update } from "./userSlice";
 
 const AddUser = () => {
   const {
@@ -15,13 +14,7 @@ const AddUser = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const onSubmit = (data) => {
-    dispatch(
-      update({
-        name: data.name,
-        email: data.email,
-      })
-    );
-    navigate("/");
+    console.log(data);
   };
 
   return (
@@ -59,7 +52,7 @@ const AddUser = () => {
             </span>
           )}
         </div>
-        <FormButton />
+        <FormButton payload="Submit" />
       </form>
     </div>
   );

@@ -1,18 +1,30 @@
-import { createSlice } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createEntityAdapter,
+  createSlice,
+} from "@reduxjs/toolkit";
+import axios from "axios";
+
+export const getUsers = createAsyncThunk("users/getUsers", async () => {
+  const response = await axios.get(
+    "https://623b066b2e056d1037ebba0e.mockapi.io/users"
+  );
+  return response.data;
+});
+
+const usersEntity = createEntityAdapter({
+  selectId: (user) => user.id,
+});
 
 const userSlice = createSlice({
   name: "user",
-  initialState: {
-    name: "",
-    email: "",
-  },
-  reducers: {
-    update: (state, action) => {
-      state.name = action.payload.name;
-      state.email = action.payload.email;
+  initialState: usersEntity.getInitialState(),
+  extraReducers: {
+    [getUsers.fulfilled]: (state, action) => {
+      usersEntity.setAll(state, action.payload);
     },
   },
 });
 
-export const { update } = userSlice.actions;
+export const usersSelector = usersEntity.getSelectors((state) => state.user);
 export default userSlice.reducer;

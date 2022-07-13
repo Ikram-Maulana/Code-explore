@@ -46,7 +46,7 @@ const EditUser = () => {
             </span>
           )}
         </div>
-        <FormButton />
+        <FormButton payload="Update" />
       </form>
     </div>
   );

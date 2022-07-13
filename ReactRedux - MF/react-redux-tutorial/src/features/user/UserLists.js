@@ -1,9 +1,17 @@
 import { Button } from "flowbite-react";
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import UserItem from "./UserItem";
+import { getUsers } from "./userSlice";
 
 const UserList = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getUsers);
+  }, [dispatch]);
+
   return (
     <>
       <div className="my-6 md:my-8">

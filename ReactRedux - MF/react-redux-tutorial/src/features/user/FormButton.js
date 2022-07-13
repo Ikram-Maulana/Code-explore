@@ -2,7 +2,7 @@ import { Button } from "flowbite-react";
 import React from "react";
 import { Link } from "react-router-dom";
 
-const FormButton = () => {
+const FormButton = ({payload}) => {
   return (
     <div className="w-full flex justify-between">
       <Link to="/">
@@ -26,7 +26,7 @@ const FormButton = () => {
           Back
         </Button>
       </Link>
-      <Button type="submit">Submit</Button>
+      <Button type="submit">{payload}</Button>
     </div>
   );
 };

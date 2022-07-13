@@ -1,12 +1,8 @@
 import { Button } from "flowbite-react";
 import React from "react";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-const UserItem = () => {
-  const id = 1;
-  const { name, email } = useSelector((state) => state.user);
-
+const UserItem = ({ id, name, email }) => {
   return (
     <div className="bg-gray-300 p-5 flex items-center justify-between rounded-md">
       <div>
