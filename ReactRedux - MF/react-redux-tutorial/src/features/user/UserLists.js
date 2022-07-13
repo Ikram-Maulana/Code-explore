@@ -3,19 +3,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import UserItem from "./UserItem";
 
-const users = [
-  {
-    id: 1,
-    name: "John Doe",
-    email: "john@gmail.com",
-  },
-  {
-    id: 2,
-    name: "Jane Doe",
-    email: "jane@gmail.com",
-  },
-];
-
 const UserList = () => {
   return (
     <>
@@ -25,13 +12,14 @@ const UserList = () => {
         </Button>
       </div>
       <div className="grid gap-5 md:grid-cols-2">
-        {users.length ? (
+        <UserItem />
+        {/* {users.length ? (
           users.map((user) => <UserItem key={user.id} />)
         ) : (
           <p className="text-center col-span-2 text-gray-700 font-semibold">
             No User
           </p>
-        )}
+        )} */}
       </div>
     </>
   );

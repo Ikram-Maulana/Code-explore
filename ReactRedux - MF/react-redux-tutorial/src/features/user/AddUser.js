@@ -1,7 +1,10 @@
 import { Label, TextInput } from "flowbite-react";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import FormButton from "./FormButton";
+import { update } from "./userSlice";
 
 const AddUser = () => {
   const {
@@ -9,7 +12,17 @@ const AddUser = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => console.log(data);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const onSubmit = (data) => {
+    dispatch(
+      update({
+        name: data.name,
+        email: data.email,
+      })
+    );
+    navigate("/");
+  };
 
   return (
     <div className="mt-10 max-w-xl mx-auto" onSubmit={handleSubmit(onSubmit)}>

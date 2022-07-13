@@ -1,15 +1,17 @@
 import { Button } from "flowbite-react";
 import React from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const UserItem = () => {
   const id = 1;
+  const { name, email } = useSelector((state) => state.user);
 
   return (
     <div className="bg-gray-300 p-5 flex items-center justify-between rounded-md">
       <div>
-        <h3 className="font-bold text-lg text-gray-700">John Doe</h3>
-        <span className="font-normal text-gray-600">john@gmail.com</span>
+        <h3 className="font-bold text-lg text-gray-700">{name}</h3>
+        <span className="font-normal text-gray-600">{email}</span>
       </div>
       <div className="flex gap-1 md:gap-2">
         <Link to={`/edit-user/${id}`}>
