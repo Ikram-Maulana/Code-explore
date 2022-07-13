@@ -30,6 +30,17 @@ export const saveUser = createAsyncThunk("users/saveUser", async (value) => {
   }
 });
 
+export const deleteUser = createAsyncThunk("users/deleteUser", async (id) => {
+  try {
+    await axios.delete(
+      `https://623b066b2e056d1037ebba0e.mockapi.io/users/${id}`
+    );
+    return id;
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 const usersEntity = createEntityAdapter({
   selectId: (user) => user.id,
 });
@@ -43,6 +54,9 @@ const userSlice = createSlice({
     },
     [saveUser.fulfilled]: (state, action) => {
       usersEntity.addOne(state, action.payload);
+    },
+    [deleteUser.fulfilled]: (state, action) => {
+      usersEntity.removeOne(state, action.payload);
     },
   },
 });

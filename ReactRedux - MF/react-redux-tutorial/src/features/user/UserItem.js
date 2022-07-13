@@ -1,8 +1,9 @@
 import { Button } from "flowbite-react";
 import React from "react";
 import { Link } from "react-router-dom";
+import { deleteUser } from "./userSlice";
 
-const UserItem = ({ id, name, email }) => {
+const UserItem = ({ id, name, email, dispatch }) => {
   return (
     <div className="bg-gray-300 p-5 flex items-center justify-between rounded-md">
       <div>
@@ -33,7 +34,7 @@ const UserItem = ({ id, name, email }) => {
             </svg>
           </Button>
         </Link>
-        <Button color="light">
+        <Button color="light" onClick={() => dispatch(deleteUser(id))}>
           <svg
             className="w-6 h-6"
             fill="none"

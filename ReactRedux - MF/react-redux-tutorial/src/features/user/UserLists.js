@@ -22,7 +22,7 @@ const UserList = () => {
       </div>
       <div className="grid gap-5 md:grid-cols-2">
         {users.length ? (
-          users.map((user) => <UserItem key={user.id} {...user} />)
+          users.map((user) => <UserItem key={user.id} {...user} dispatch={dispatch} />)
         ) : (
           <p className="text-center col-span-2 text-gray-700 font-semibold">
             No User
