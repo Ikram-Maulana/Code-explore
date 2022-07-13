@@ -6,10 +6,14 @@ import {
 import axios from "axios";
 
 export const getUsers = createAsyncThunk("users/getUsers", async () => {
-  const response = await axios.get(
-    "https://623b066b2e056d1037ebba0e.mockapi.io/users"
-  );
-  return response.data;
+  try {
+    const response = await axios.get(
+      "https://623b066b2e056d1037ebba0e.mockapi.io/users"
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 const usersEntity = createEntityAdapter({

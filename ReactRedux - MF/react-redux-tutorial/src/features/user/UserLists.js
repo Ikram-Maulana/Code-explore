@@ -1,15 +1,16 @@
 import { Button } from "flowbite-react";
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import UserItem from "./UserItem";
-import { getUsers } from "./userSlice";
+import { getUsers, usersSelector } from "./userSlice";
 
 const UserList = () => {
+  const users = useSelector(usersSelector.selectAll);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getUsers);
+    dispatch(getUsers());
   }, [dispatch]);
 
   return (
@@ -20,14 +21,13 @@ const UserList = () => {
         </Button>
       </div>
       <div className="grid gap-5 md:grid-cols-2">
-        <UserItem />
-        {/* {users.length ? (
-          users.map((user) => <UserItem key={user.id} />)
+        {users.length ? (
+          users.map((user) => <UserItem key={user.id} {...user} />)
         ) : (
           <p className="text-center col-span-2 text-gray-700 font-semibold">
             No User
           </p>
-        )} */}
+        )}
       </div>
     </>
   );
