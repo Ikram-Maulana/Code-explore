@@ -16,6 +16,20 @@ export const getUsers = createAsyncThunk("users/getUsers", async () => {
   }
 });
 
+export const saveUser = createAsyncThunk("users/saveUser", async (value) => {
+  try {
+    const response = await axios.post(
+      "https://623b066b2e056d1037ebba0e.mockapi.io/users",
+      {
+        ...value,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 const usersEntity = createEntityAdapter({
   selectId: (user) => user.id,
 });
@@ -26,6 +40,9 @@ const userSlice = createSlice({
   extraReducers: {
     [getUsers.fulfilled]: (state, action) => {
       usersEntity.setAll(state, action.payload);
+    },
+    [saveUser.fulfilled]: (state, action) => {
+      usersEntity.addOne(state, action.payload);
     },
   },
 });

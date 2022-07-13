@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import FormButton from "./FormButton";
+import { saveUser } from "./userSlice";
 
 const AddUser = () => {
   const {
@@ -13,8 +14,14 @@ const AddUser = () => {
   } = useForm();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const onSubmit = (data) => {
-    console.log(data);
+
+  const onSubmit = async (data) => {
+    await dispatch(
+      saveUser({
+        ...data,
+      })
+    );
+    navigate("/");
   };
 
   return (

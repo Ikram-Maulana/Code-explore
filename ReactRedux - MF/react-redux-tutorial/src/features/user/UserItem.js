@@ -7,7 +7,12 @@ const UserItem = ({ id, name, email }) => {
     <div className="bg-gray-300 p-5 flex items-center justify-between rounded-md">
       <div>
         <h3 className="font-bold text-lg text-gray-700">{name}</h3>
-        <span className="font-normal text-gray-600">{email}</span>
+        <span className="font-normal text-gray-600 lg:hidden">
+          {email.length > 16 ? `${email.substring(0, 13)}...` : email}
+        </span>
+        <span className="font-normal text-gray-600 hidden lg:inline">
+          {email}
+        </span>
       </div>
       <div className="flex gap-1 md:gap-2">
         <Link to={`/edit-user/${id}`}>
