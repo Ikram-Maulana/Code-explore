@@ -1,4 +1,4 @@
-import Layout from "../../components/Layout";
+import Layout from "@/components/Layout";
 
 const getStaticPaths = async () => {
   const response = await fetch("https://jsonplaceholder.typicode.com/users");
@@ -29,13 +29,15 @@ const getStaticProps = async (ctx) => {
 };
 
 const detail = ({ userData }) => {
+  const { name, email, phone, website } = userData;
+
   return (
     <Layout title="User Detail">
       <div>
-        <p>{userData.name}</p>
-        <p>{userData.email}</p>
-        <p>{userData.phone}</p>
-        <p>{userData.website}</p>
+        <p>{name}</p>
+        <p>{email}</p>
+        <p>{phone}</p>
+        <p>{website}</p>
       </div>
     </Layout>
   );
