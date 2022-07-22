@@ -21,3 +21,22 @@ a {
 #__next {
   height: 100%;
 }
+
+.container-not-found {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.title-not-found {
+  color: darkgrey;
+  text-align: center;
+  margin: 0;
+}
+
+.title-not-found:last-child {
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}
