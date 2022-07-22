@@ -1,13 +1,19 @@
 import Head from "next/head";
+import { useRouter } from "next/router";
 
 const detail = () => {
+  const router = useRouter();
+  const { id } = router.query;
+
   return (
     <div>
       <Head>
         <title>Users Detail Page</title>
       </Head>
 
-      <p>Users Detail Pages</p>
+      <main>
+        <p>Users Detail Pages {id}</p>
+      </main>
     </div>
   );
 };
