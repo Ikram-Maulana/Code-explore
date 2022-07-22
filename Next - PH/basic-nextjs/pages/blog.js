@@ -3,7 +3,7 @@ import Layout from "../components/Layout";
 
 const blog = () => {
   return (
-    <Layout title="Blogs">
+    <Layout title="Blog Page">
       <p>Blogs Page</p>
     </Layout>
   );

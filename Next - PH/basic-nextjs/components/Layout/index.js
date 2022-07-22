@@ -7,7 +7,8 @@ const Layout = (props) => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>{props.title}</title>
+        <title>NextJS Basic | {props.title}</title>
+        <meta name="description" content="Website NextJS Basic" />
       </Head>
 
       <Header />
