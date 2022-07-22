@@ -1,21 +1,45 @@
-import Head from "next/head";
-import { useRouter } from "next/router";
+import Layout from "../../components/Layout";
 
-const detail = () => {
-  const router = useRouter();
-  const { id } = router.query;
+const getStaticPaths = async () => {
+  const response = await fetch("https://jsonplaceholder.typicode.com/users");
+  const data = await response.json();
 
+  const paths = data.map((user) => ({
+    params: { id: `${user.id}` },
+  }));
+
+  return {
+    paths,
+    fallback: false,
+  };
+};
+
+const getStaticProps = async (ctx) => {
+  const { id } = ctx.params;
+  const response = await fetch(
+    `https://jsonplaceholder.typicode.com/users/${id}`
+  );
+  const data = await response.json();
+
+  return {
+    props: {
+      userData: data,
+    },
+  };
+};
+
+const detail = ({ userData }) => {
   return (
-    <div>
-      <Head>
-        <title>Users Detail Page</title>
-      </Head>
-
-      <main>
-        <p>Users Detail Pages {id}</p>
-      </main>
-    </div>
+    <Layout title="User Detail">
+      <div>
+        <p>{userData.name}</p>
+        <p>{userData.email}</p>
+        <p>{userData.phone}</p>
+        <p>{userData.website}</p>
+      </div>
+    </Layout>
   );
 };
 
 export default detail;
+export { getStaticPaths, getStaticProps };
