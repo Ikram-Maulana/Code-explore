@@ -1,8 +1,11 @@
 import Layout from "@/components/Layout";
+import axios from "axios";
 
 const getStaticPaths = async () => {
-  const response = await fetch("https://jsonplaceholder.typicode.com/users");
-  const data = await response.json();
+  const response = await axios.get(
+    "https://jsonplaceholder.typicode.com/users"
+  );
+  const data = response.data;
 
   const paths = data.map((user) => ({
     params: { id: `${user.id}` },
@@ -16,10 +19,10 @@ const getStaticPaths = async () => {
 
 const getStaticProps = async (ctx) => {
   const { id } = ctx.params;
-  const response = await fetch(
+  const response = await axios.get(
     `https://jsonplaceholder.typicode.com/users/${id}`
   );
-  const data = await response.json();
+  const data = response.data;
 
   return {
     props: {

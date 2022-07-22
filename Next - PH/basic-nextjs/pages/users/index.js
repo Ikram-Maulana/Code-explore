@@ -1,35 +1,37 @@
 import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
 import styles from "@/styles/Users.module.css";
+import axios from "axios";
 
 const getStaticProps = async () => {
-  const response = await fetch("https://jsonplaceholder.typicode.com/users");
-  const data = await response.json();
+  const response = await axios.get(
+    "https://jsonplaceholder.typicode.com/users"
+  );
+  let data = response.data;
 
   return {
     props: {
-      usersData: data,
+      dataUsers: data,
     },
   };
 };
 
-const index = ({ usersData }) => {
+const index = (props) => {
+  const { dataUsers } = props;
   const router = useRouter();
 
   return (
     <Layout title="Users Page">
       <>
-        {usersData.map((user) => {
-          const { id, name, email } = user;
-
+        {dataUsers.map((user) => {
           return (
             <div
-              key={id}
-              onClick={() => router.push(`/users/${id}`)}
+              key={user.id}
+              onClick={() => router.push(`/users/${user.id}`)}
               className={styles.card}
             >
-              <p>{name}</p>
-              <p>{email}</p>
+              <p>{user.name}</p>
+              <p>{user.email}</p>
             </div>
           );
         })}
