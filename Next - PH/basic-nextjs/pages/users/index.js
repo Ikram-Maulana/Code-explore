@@ -1,14 +1,11 @@
 import Head from "next/head";
+import Layout from "../../components/Layout";
 
 const index = () => {
   return (
-    <div>
-      <Head>
-        <title>Users Page</title>
-      </Head>
-
+    <Layout title="Users">
       <p>Users Page</p>
-    </div>
+    </Layout>
   );
 };
 

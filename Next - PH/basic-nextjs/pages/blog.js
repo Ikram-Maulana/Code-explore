@@ -1,14 +1,11 @@
 import Head from "next/head";
+import Layout from "../components/Layout";
 
 const blog = () => {
   return (
-    <div>
-      <Head> 
-        <title>Blogs Page</title>
-      </Head>
-      
+    <Layout title="Blogs">
       <p>Blogs Page</p>
-    </div>
+    </Layout>
   );
 };
 
